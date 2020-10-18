@@ -7,11 +7,13 @@ import {
   OnInit,
   ViewEncapsulation,
 } from '@angular/core';
+import { DialogService } from '@ngneat/dialog';
 import { Observable, Subscription } from 'rxjs';
 import { IProfiler } from '../../models/profiler';
 import { ITiming } from '../../models/timing';
 import { NgxMiniProfilerOptions } from '../../services/ngx-miniprofiler-options';
 import { NgxMiniprofilerService } from '../../services/ngx-miniprofiler.service';
+import { NgxMiniProfilerQueryDialogComponent } from '../ngx-miniprofiler-query-dialog/ngx-miniprofiler-query-dialog.component';
 
 @Component({
   selector: 'ngx-miniprofiler-timings',
@@ -34,12 +36,13 @@ export class NgxMiniProfilerTimingsComponent implements OnInit, OnDestroy {
   constructor(
     private profilerService: NgxMiniprofilerService,
     private profilerOptions: NgxMiniProfilerOptions,
+    private dialog: DialogService,
     private cdr: ChangeDetectorRef
   ) {}
 
   public ngOnInit(): void {
     this.customTimingTypes = this.result.CustomTimingStats ? Object.keys(this.result.CustomTimingStats) : [];
-    this.customTimings = this.result.CustomTimingStats ? Object.keys(this.result.CustomTimingStats) : []; )
+    this.customTimings = this.result.CustomTimingStats ? Object.keys(this.result.CustomTimingStats) : [];
     this.customTimingPropertyNames = Object.getOwnPropertyNames(this.result.CustomTimingStats);
     this.customLinks = Object.keys(this.result.CustomLinks);
   }
@@ -112,5 +115,14 @@ export class NgxMiniProfilerTimingsComponent implements OnInit, OnDestroy {
       return '';
     }
     return (milliseconds || 0).toFixed(decimalPlaces === undefined ? 1 : decimalPlaces);
+  }
+
+  public openQueryDialog(timing: ITiming): void {
+    const dialogRef = this.dialog.open(NgxMiniProfilerQueryDialogComponent, {
+      data: {
+        profilerResult: this.result,
+        timing,
+      },
+    });
   }
 }

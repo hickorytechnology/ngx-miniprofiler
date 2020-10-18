@@ -20,7 +20,7 @@ export class NgxMiniProfilerInterceptor implements HttpInterceptor {
           headers.forEach((miniprofilerIdHeader) => {
             const ids = JSON.parse(miniprofilerIdHeader) as string[];
             if (ids.length > 0) {
-              this.profilerService.SetIds(ids);
+              this.profilerService.setIds(ids);
             }
           });
         }

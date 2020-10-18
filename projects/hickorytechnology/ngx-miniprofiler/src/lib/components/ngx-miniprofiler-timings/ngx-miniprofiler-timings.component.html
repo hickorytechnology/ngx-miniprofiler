@@ -74,7 +74,8 @@
         </td>
 
         <td class="mp-duration" *ngFor="let tk of customTimingTypes">
-          <a href="#" class="{{ queriesClassName(timing, tk) }}" [title]="queriesTitle(timing, tk)">
+          <a href="#" class="{{ queriesClassName(timing, tk) }}" [title]="queriesTitle(timing, tk)"
+            (click)="openQueryDialog(timing)">
             {{ duration(timing.CustomTimingStats[tk].Duration) }}
             ({{ timing.CustomTimingStats[tk].Count }})
             <span class="mp-warning" *ngIf="timing.HasDuplicateCustomTimings[tk] || timing.HasWarnings[tk]">!</span>

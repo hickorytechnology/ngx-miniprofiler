@@ -5,7 +5,11 @@
   "projects": {
     "ngx-miniprofiler": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -24,7 +28,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.scss"
             ],
             "scripts": []
           },
@@ -88,7 +92,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.scss"
             ],
             "scripts": []
           }
@@ -124,7 +128,7 @@
       "projectType": "library",
       "root": "projects/hickorytechnology/ngx-miniprofiler",
       "sourceRoot": "projects/hickorytechnology/ngx-miniprofiler/src",
-      "prefix": "lib",
+      "prefix": "ngx",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
@@ -159,6 +163,7 @@
           }
         }
       }
-    }},
+    }
+  },
   "defaultProject": "ngx-miniprofiler"
 }

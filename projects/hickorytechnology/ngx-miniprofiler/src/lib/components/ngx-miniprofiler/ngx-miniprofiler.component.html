@@ -1,0 +1,8 @@
+<ng-container *ngIf="idsUpdated$ | async as ids">
+  <ng-container *ngIf="fetchResults(ids) | async as results">
+    <div class="mp-results mp-{{ options.renderPosition }} mp-{{ options.colorScheme }} {{ controlsClassName }}">
+
+
+    </div>
+  </ng-container>
+</ng-container>

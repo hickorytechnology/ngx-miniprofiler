@@ -1,10 +1,10 @@
 import { Spectator, createComponentFactory } from '@ngneat/spectator';
 
-import { NgxMiniprofilerComponent } from './ngx-miniprofiler.component';
+import { NgxMiniProfilerComponent } from './ngx-miniprofiler.component';
 
 describe('NgxMiniprofilerComponent', () => {
-  let spectator: Spectator<NgxMiniprofilerComponent>;
-  const createComponent = createComponentFactory(NgxMiniprofilerComponent);
+  let spectator: Spectator<NgxMiniProfilerComponent>;
+  const createComponent = createComponentFactory(NgxMiniProfilerComponent);
 
   it('should create', () => {
     spectator = createComponent();

@@ -9,6 +9,13 @@ export class NgxMiniProfilerInterceptor implements HttpInterceptor {
   constructor(private profilerService: NgxMiniprofilerService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (req.headers.has('skip')) {
+      const request = req.clone({
+        headers: req.headers.delete('skip'),
+      });
+      return next.handle(request);
+    }
+
     return next.handle(req).pipe(
       tap((event) => {
         if (event instanceof HttpResponse) {

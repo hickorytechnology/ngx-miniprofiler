@@ -127,7 +127,7 @@ export class NgxMiniprofilerService {
    * @param ids MiniProfiler IDs that are used to fetch results
    */
   public fetchResults(ids: string[]): Observable<IProfiler[]> {
-    const headers: HttpHeaders = new HttpHeaders({ Accept: 'application/json' });
+    const headers: HttpHeaders = new HttpHeaders({ Accept: 'application/json', skip: 'true' });
     const requests: Observable<IProfiler>[] = [];
     for (const id of ids) {
       const apiCall = `${this.options.api}/results?id=${id}`;

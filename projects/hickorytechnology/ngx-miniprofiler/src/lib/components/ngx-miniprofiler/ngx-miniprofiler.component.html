@@ -1,11 +1,8 @@
-<ng-container *ngIf="idsUpdated$ | async">
-  <span>1</span>
-  <ng-container *ngIf="profileResults">
-    <span>2</span>
-    <div class="mp-results mp-{{ options.renderPosition }} mp-{{ options.colorScheme }} {{ controlsClassName }}">
-      <div class="mp-result" *ngFor="let result of profileResults">
-        <ngx-miniprofiler-result [result]="result"></ngx-miniprofiler-result>
-      </div>
+<ng-container *ngIf="profileResults.length > 0">
+  <span>2</span>
+  <div class="mp-results mp-{{ options.renderPosition }} mp-{{ options.colorScheme }} {{ controlsClassName }}">
+    <div class="mp-result" *ngFor="let result of profileResults">
+      <ngx-miniprofiler-result [result]="result"></ngx-miniprofiler-result>
     </div>
-  </ng-container>
+  </div>
 </ng-container>

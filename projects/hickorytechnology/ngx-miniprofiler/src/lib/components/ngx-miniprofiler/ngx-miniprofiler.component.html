@@ -1,8 +1,9 @@
 <ng-container *ngIf="idsUpdated$ | async as ids">
   <ng-container *ngIf="fetchResults(ids) | async as results">
     <div class="mp-results mp-{{ options.renderPosition }} mp-{{ options.colorScheme }} {{ controlsClassName }}">
-
-
+      <div class="mp-result" *ngFor="let result of results">
+        <ngx-miniprofiler-result [result]="result"></ngx-miniprofiler-result>
+      </div>
     </div>
   </ng-container>
 </ng-container>

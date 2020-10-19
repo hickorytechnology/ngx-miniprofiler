@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.21](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.20...v0.0.21) (2020-10-19)
+
+
+### Bug Fixes
+
+* 🐛 change detection on mp-button click ([4a3bd35](https://github.com/hickorytechnology/ngx-miniprofiler/commit/4a3bd353db940d643d4d537ac7dac3629b494ea2))
+
 ### [0.0.20](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.19...v0.0.20) (2020-10-19)
 
 

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.9](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.8...v0.0.9) (2020-10-19)
+
+
+### Bug Fixes
+
+* 🐛 do not intercept miniprofiler requests ([368c7e7](https://github.com/hickorytechnology/ngx-miniprofiler/commit/368c7e7699e09efe4a2a2f8b4a78b3e894d343b5))
+
 ### [0.0.8](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.7...v0.0.8) (2020-10-19)
 
 ### [0.0.7](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.5...v0.0.7) (2020-10-19)

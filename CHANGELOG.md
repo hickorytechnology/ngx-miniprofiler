@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.19](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.18...v0.0.19) (2020-10-19)
+
+
+### Features
+
+* 🎸 added click handler for mp button ([72ea2b0](https://github.com/hickorytechnology/ngx-miniprofiler/commit/72ea2b0af3140b97a5cc44740c32af08d86eda88))
+
 ### [0.0.18](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.17...v0.0.18) (2020-10-19)
 
 

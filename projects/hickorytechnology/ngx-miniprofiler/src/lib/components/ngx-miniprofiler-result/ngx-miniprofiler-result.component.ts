@@ -35,6 +35,8 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy {
   @Output()
   buttonClick = new EventEmitter();
 
+  public showPopup = false;
+
   constructor(
     private cdr: ChangeDetectorRef,
     @Optional()
@@ -42,9 +44,7 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy {
     private profilerOptions: NgxMiniProfilerDefaultOptions
   ) {}
 
-  public ngOnInit(): void {
-    // this.buildRootClass();
-  }
+  public ngOnInit(): void {}
 
   public ngOnDestroy(): void {}
 
@@ -57,7 +57,7 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy {
   }
 
   public toggleShowPopup(): void {
-    this.buttonClick.emit();
+    this.showPopup = !this.showPopup;
     this.cdr.markForCheck();
   }
 

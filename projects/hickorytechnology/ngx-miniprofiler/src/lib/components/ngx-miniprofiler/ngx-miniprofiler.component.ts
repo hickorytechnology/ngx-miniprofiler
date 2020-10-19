@@ -45,6 +45,7 @@ export class NgxMiniProfilerComponent implements OnInit, OnDestroy {
                   .sort((x, y) => new Date(x.Started).getTime() - new Date(y.Started).getTime())
                   .reverse();
                 this.profileResults = formatted;
+                this.cdr.markForCheck();
                 return of(formatted);
               })
             );

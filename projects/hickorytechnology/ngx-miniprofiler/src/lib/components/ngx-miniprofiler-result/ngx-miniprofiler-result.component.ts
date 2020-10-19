@@ -52,10 +52,6 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy {
     return this.result.HasWarning ? 'mp-button-warning' : '';
   }
 
-  public get popupActiveClassName(): string {
-    return this.showPopup ? 'active' : '';
-  }
-
   public toggleShowPopup(): void {
     this.showPopup = !this.showPopup;
   }
@@ -97,6 +93,10 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy {
 
     if (this.isNew) {
       rootClassBuilder.push('new');
+    }
+
+    if (this.showPopup) {
+      rootClassBuilder.push('active');
     }
 
     this.rootClass = rootClassBuilder.join(' ');

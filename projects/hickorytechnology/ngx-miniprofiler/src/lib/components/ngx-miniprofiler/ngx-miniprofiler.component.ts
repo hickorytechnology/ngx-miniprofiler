@@ -26,7 +26,6 @@ export class NgxMiniProfilerComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef
   ) {}
 
-  public idsUpdated$: Observable<string[]>;
   public results$: Observable<IProfiler[]>;
   public profileResults: IProfiler[] = [];
 
@@ -34,8 +33,7 @@ export class NgxMiniProfilerComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
 
   public ngOnInit(): void {
-    this.idsUpdated$ = this.profilerService.idUpdated;
-    this.subscriptions.add(this.idsUpdated$.pipe(mergeMap(this.fetchResults)).subscribe());
+    this.subscriptions.add(this.profilerService.idUpdated.pipe(switchMap((ids) => this.fetchResults)).subscribe());
   }
 
   public ngOnDestroy(): void {

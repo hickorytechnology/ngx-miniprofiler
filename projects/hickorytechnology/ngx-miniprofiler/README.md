@@ -5,7 +5,8 @@ This library was generated with [Angular CLI](https://github.com/angular/angular
 ## Code scaffolding
 
 Run `ng generate component component-name --project ngx-miniprofiler` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project ngx-miniprofiler`.
-> Note: Don't forget to add `--project ngx-miniprofiler` or else it will be added to the default project in your `angular.json` file. 
+
+> Note: Don't forget to add `--project ngx-miniprofiler` or else it will be added to the default project in your `angular.json` file.
 
 ## Build
 
@@ -13,7 +14,7 @@ Run `ng build ngx-miniprofiler` to build the project. The build artifacts will b
 
 ## Publishing
 
-After building your library with `ng build ngx-miniprofiler`, go to the dist folder `cd dist/ngx-miniprofiler` and run `npm publish`.
+After building your library with `ng build ngx-miniprofiler`, go to the dist folder `cd dist/hickorytechnology/ngx-miniprofiler` and run `npm publish`.
 
 ## Running unit tests
 

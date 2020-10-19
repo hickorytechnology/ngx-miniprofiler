@@ -9,7 +9,7 @@ import { NgxMiniProfilerComponent } from './components/ngx-miniprofiler/ngx-mini
 import { NgxMiniProfilerInterceptor } from './guards/ngx-miniprofiler.interceptor';
 
 @NgModule({
-  imports: [CommonModule, HttpClientModule, DialogModule.forRoot()],
+  imports: [CommonModule, HttpClientModule, DialogModule],
   declarations: [
     NgxMiniProfilerComponent,
     NgxMiniProfilerResultComponent,

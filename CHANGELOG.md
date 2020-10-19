@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.23](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.22...v0.0.23) (2020-10-19)
+
+
+### Bug Fixes
+
+* 🐛 output callback name ([4d10592](https://github.com/hickorytechnology/ngx-miniprofiler/commit/4d105927943c94550bdef39290839fb058fbffe4))
+
 ### [0.0.22](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.21...v0.0.22) (2020-10-19)
 
 

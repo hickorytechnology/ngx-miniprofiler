@@ -33,6 +33,8 @@ export class NgxMiniProfilerComponent implements OnInit, OnDestroy {
   public results$: Observable<IProfiler[]>;
   public profileResults: IProfiler[] = [];
 
+  public showPopup = false;
+
   private miniProfilerIds: string[] = [];
   private subscriptions = new Subscription();
 
@@ -101,5 +103,9 @@ export class NgxMiniProfilerComponent implements OnInit, OnDestroy {
         return of(formatted);
       })
     );
+  }
+
+  public toggleShowPopup(): void {
+    this.showPopup = !this.showPopup;
   }
 }

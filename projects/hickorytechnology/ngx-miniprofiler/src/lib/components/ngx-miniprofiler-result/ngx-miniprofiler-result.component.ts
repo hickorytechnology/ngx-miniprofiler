@@ -2,14 +2,16 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   HostBinding,
   Inject,
   Input,
   OnDestroy,
   OnInit,
   Optional,
+  Output,
+  ViewEncapsulation,
 } from '@angular/core';
-import { IGapInfo } from '../../models/gaps';
 import { IProfiler } from '../../models/profiler';
 import { NgxMiniProfilerDefaultOptions, NGX_MINIPROFILER_DEFAULT_OPTIONS } from '../../ngx-miniprofiler-options';
 
@@ -18,10 +20,11 @@ import { NgxMiniProfilerDefaultOptions, NGX_MINIPROFILER_DEFAULT_OPTIONS } from 
   templateUrl: './ngx-miniprofiler-result.component.html',
   styleUrls: ['./ngx-miniprofiler-result.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy {
-  @HostBinding('class')
-  rootClass: string;
+  // @HostBinding('class')
+  // rootClass: string;
 
   @Input()
   result: IProfiler;
@@ -29,7 +32,8 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy {
   @Input()
   isNew = true;
 
-  public showPopup = false;
+  @Output()
+  buttonClick = new EventEmitter();
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -39,7 +43,7 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit(): void {
-    this.buildRootClass();
+    // this.buildRootClass();
   }
 
   public ngOnDestroy(): void {}
@@ -53,7 +57,7 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy {
   }
 
   public toggleShowPopup(): void {
-    this.showPopup = !this.showPopup;
+    this.buttonClick.emit();
     this.cdr.markForCheck();
   }
 
@@ -82,24 +86,24 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy {
     return (milliseconds || 0).toFixed(decimalPlaces === undefined ? 1 : decimalPlaces);
   }
 
-  private buildRootClass(): void {
-    const rootClassBuilder: string[] = ['mp-result'];
-    if (this.profilerOptions.showTrivial) {
-      rootClassBuilder.push('show-trivial');
-    }
+  // private buildRootClass(): void {
+  //   const rootClassBuilder: string[] = ['mp-result'];
+  //   if (this.profilerOptions.showTrivial) {
+  //     rootClassBuilder.push('show-trivial');
+  //   }
 
-    if (this.profilerOptions.showChildrenTime) {
-      rootClassBuilder.push('show-columns');
-    }
+  //   if (this.profilerOptions.showChildrenTime) {
+  //     rootClassBuilder.push('show-columns');
+  //   }
 
-    if (this.isNew) {
-      rootClassBuilder.push('new');
-    }
+  //   if (this.isNew) {
+  //     rootClassBuilder.push('new');
+  //   }
 
-    if (this.showPopup) {
-      rootClassBuilder.push('active');
-    }
+  //   if (this.showPopup) {
+  //     rootClassBuilder.push('active');
+  //   }
 
-    this.rootClass = rootClassBuilder.join(' ');
-  }
+  //   this.rootClass = rootClassBuilder.join(' ');
+  // }
 }

@@ -1,8 +1,6 @@
 <ng-container *ngIf="profileResults.length > 0">
-  <span>2</span>
-  <div class="mp-results mp-{{ options.renderPosition }} mp-scheme-{{ options.colorScheme }} {{ controlsClassName }}"
-    [class.active]="showPopup">
-    <div class="mp-result" *ngFor="let result of profileResults">
+  <div class="mp-results mp-{{ options.renderPosition }} mp-scheme-{{ options.colorScheme }} {{ controlsClassName }}">
+    <div class="mp-result" [class.active]="showPopup" *ngFor="let result of profileResults">
       <ngx-miniprofiler-result [result]="result" (buttonClick)="toggleShowPopup()"></ngx-miniprofiler-result>
     </div>
   </div>

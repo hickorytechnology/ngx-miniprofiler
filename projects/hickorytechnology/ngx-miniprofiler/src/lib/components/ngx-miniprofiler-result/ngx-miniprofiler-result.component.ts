@@ -54,6 +54,7 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy {
 
   public toggleShowPopup(): void {
     this.showPopup = !this.showPopup;
+    this.cdr.markForCheck();
   }
 
   /**

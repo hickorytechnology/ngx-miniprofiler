@@ -22,6 +22,8 @@ export class NgxMiniProfilerComponent implements OnInit, OnDestroy {
   public idsUpdated$: Observable<string[]>;
   public results$: Observable<IProfiler[]>;
 
+  private miniProfilerIds: string[] = [];
+
   private subscriptions = new Subscription();
 
   constructor(
@@ -36,6 +38,16 @@ export class NgxMiniProfilerComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  public idsChanged(ids: string[]): boolean {
+    let result = false;
+    if (this.miniProfilerIds.length !== ids.length) {
+      result = true;
+    }
+
+    this.miniProfilerIds = ids;
+    return result;
   }
 
   public fetchResults(ids: string[]): Observable<IProfiler[]> {

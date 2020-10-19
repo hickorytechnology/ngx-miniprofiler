@@ -84,14 +84,4 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy {
 
     this.rootClass = rootClassBuilder.join(' ');
   }
-
-  public gapClassName(gap: IGapInfo): string {
-    const classNameBuilder: string[] = ['mp-gap-info'];
-
-    if (gap.Reason.duration < 4) {
-      classNameBuilder.push('mp-trivial-gap');
-    }
-
-    return classNameBuilder.join(' ');
-  }
 }

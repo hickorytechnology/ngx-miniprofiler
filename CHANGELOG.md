@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.5...v0.0.7) (2020-10-19)
+
+
+### Bug Fixes
+
+* 🐛 observable testing ([2cf987b](https://github.com/hickorytechnology/ngx-miniprofiler/commit/2cf987b18ef2a6943c51a70974e49a2b35378cca))
+* 🐛 prevent infinite looping of mp events ([5d5913f](https://github.com/hickorytechnology/ngx-miniprofiler/commit/5d5913f9a089c1a6f3af0d560d5bc0a46ad2a5d4))
+
 ### [0.0.6](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.5...v0.0.6) (2020-10-19)
 
 

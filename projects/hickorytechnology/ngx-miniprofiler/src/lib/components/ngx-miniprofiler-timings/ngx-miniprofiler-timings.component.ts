@@ -48,7 +48,7 @@ export class NgxMiniProfilerTimingsComponent implements OnInit, OnDestroy {
     this.customTimingPropertyNames = this.result.CustomTimingStats
       ? Object.getOwnPropertyNames(this.result.CustomTimingStats)
       : [];
-    this.customLinks = Object.keys(this.result.CustomLinks);
+    this.customLinks = this.result.CustomLinks ? Object.keys(this.result.CustomLinks) : [];
   }
 
   public ngOnDestroy(): void {

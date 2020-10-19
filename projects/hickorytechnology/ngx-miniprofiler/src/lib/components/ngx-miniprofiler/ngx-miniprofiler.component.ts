@@ -7,7 +7,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { Observable, of, Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { mergeMap, switchMap } from 'rxjs/operators';
 import { IProfiler } from '../../models/profiler';
 import { NgxMiniProfilerOptions } from '../../services/ngx-miniprofiler-options';
 import { NgxMiniprofilerService } from '../../services/ngx-miniprofiler.service';
@@ -35,6 +35,7 @@ export class NgxMiniProfilerComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.idsUpdated$ = this.profilerService.idUpdated;
+    this.idsUpdated$.pipe(mergeMap(this.fetchResults));
   }
 
   public ngOnDestroy(): void {

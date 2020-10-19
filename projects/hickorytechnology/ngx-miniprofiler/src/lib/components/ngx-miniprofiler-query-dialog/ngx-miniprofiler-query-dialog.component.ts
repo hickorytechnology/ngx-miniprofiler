@@ -1,9 +1,17 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit,
+  Optional,
+} from '@angular/core';
 import { DialogRef } from '@ngneat/dialog';
 import { IGapInfo } from '../../models/gaps';
 import { IProfiler } from '../../models/profiler';
 import { ITiming } from '../../models/timing';
-import { NgxMiniProfilerOptions } from '../../services/ngx-miniprofiler-options';
+import { NgxMiniProfilerDefaultOptions, NGX_MINIPROFILER_DEFAULT_OPTIONS } from '../../ngx-miniprofiler-options';
 
 @Component({
   selector: 'ngx-miniprofiler-query-dialog',
@@ -17,8 +25,10 @@ export class NgxMiniProfilerQueryDialogComponent implements OnInit, OnDestroy {
 
   constructor(
     private dialogRef: DialogRef,
-    private profilerOptions: NgxMiniProfilerOptions,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    @Optional()
+    @Inject(NGX_MINIPROFILER_DEFAULT_OPTIONS)
+    private profilerOptions: NgxMiniProfilerDefaultOptions
   ) {}
 
   public ngOnInit(): void {
@@ -28,7 +38,7 @@ export class NgxMiniProfilerQueryDialogComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {}
 
-  get options(): NgxMiniProfilerOptions {
+  public get options(): NgxMiniProfilerDefaultOptions {
     return this.profilerOptions;
   }
 

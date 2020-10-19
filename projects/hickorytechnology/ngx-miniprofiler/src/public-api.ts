@@ -15,5 +15,5 @@ export * from './lib/models/render-position.enum';
 export * from './lib/models/result-request';
 export * from './lib/models/timing';
 export * from './lib/services/ngx-miniprofiler.service';
-export * from './lib/services/ngx-miniprofiler-options';
+export * from './lib/ngx-miniprofiler-options';
 export * from './lib/ngx-miniprofiler.module';

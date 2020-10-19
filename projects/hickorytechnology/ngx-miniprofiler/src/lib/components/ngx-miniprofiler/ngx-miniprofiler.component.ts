@@ -2,14 +2,16 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Inject,
   OnDestroy,
   OnInit,
+  Optional,
   ViewEncapsulation,
 } from '@angular/core';
 import { Observable, of, Subscription } from 'rxjs';
-import { mergeMap, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { IProfiler } from '../../models/profiler';
-import { NgxMiniProfilerOptions } from '../../services/ngx-miniprofiler-options';
+import { NgxMiniProfilerDefaultOptions, NGX_MINIPROFILER_DEFAULT_OPTIONS } from '../../ngx-miniprofiler-options';
 import { NgxMiniprofilerService } from '../../services/ngx-miniprofiler.service';
 
 @Component({
@@ -22,8 +24,10 @@ import { NgxMiniprofilerService } from '../../services/ngx-miniprofiler.service'
 export class NgxMiniProfilerComponent implements OnInit, OnDestroy {
   constructor(
     private profilerService: NgxMiniprofilerService,
-    private profilerOptions: NgxMiniProfilerOptions,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    @Optional()
+    @Inject(NGX_MINIPROFILER_DEFAULT_OPTIONS)
+    private profilerOptions: NgxMiniProfilerDefaultOptions
   ) {}
 
   public results$: Observable<IProfiler[]>;
@@ -59,8 +63,20 @@ export class NgxMiniProfilerComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  public options(): NgxMiniProfilerOptions {
+  public get options(): NgxMiniProfilerDefaultOptions {
     return this.profilerOptions;
+  }
+
+  public get controlsClassName(): string {
+    const classNameBuilder = [];
+
+    if (this.options.showControls) {
+      classNameBuilder.push('mp-min');
+    } else {
+      classNameBuilder.push('mp-no-controls');
+    }
+
+    return classNameBuilder.join(' ');
   }
 
   public idsChanged(ids: string[]): boolean {

@@ -1,6 +1,6 @@
 <ng-container *ngIf="profileResults.length > 0">
   <span>2</span>
-  <div class="mp-results mp-{{ options.renderPosition }} mp-{{ options.colorScheme }} {{ controlsClassName }}">
+  <div class="mp-results mp-{{ options.renderPosition }} mp-scheme-{{ options.colorScheme }} {{ controlsClassName }}">
     <div class="mp-result" *ngFor="let result of profileResults">
       <ngx-miniprofiler-result [result]="result"></ngx-miniprofiler-result>
     </div>

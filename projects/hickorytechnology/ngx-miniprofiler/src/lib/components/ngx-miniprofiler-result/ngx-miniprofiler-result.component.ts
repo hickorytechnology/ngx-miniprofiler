@@ -3,13 +3,15 @@ import {
   ChangeDetectorRef,
   Component,
   HostBinding,
+  Inject,
   Input,
   OnDestroy,
   OnInit,
+  Optional,
 } from '@angular/core';
 import { IGapInfo } from '../../models/gaps';
 import { IProfiler } from '../../models/profiler';
-import { NgxMiniProfilerOptions } from '../../services/ngx-miniprofiler-options';
+import { NgxMiniProfilerDefaultOptions, NGX_MINIPROFILER_DEFAULT_OPTIONS } from '../../ngx-miniprofiler-options';
 
 @Component({
   selector: 'ngx-miniprofiler-result',
@@ -27,7 +29,12 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy {
   @Input()
   isNew = true;
 
-  constructor(private profilerOptions: NgxMiniProfilerOptions, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private cdr: ChangeDetectorRef,
+    @Optional()
+    @Inject(NGX_MINIPROFILER_DEFAULT_OPTIONS)
+    private profilerOptions: NgxMiniProfilerDefaultOptions
+  ) {}
 
   public ngOnInit(): void {
     this.buildRootClass();
@@ -35,7 +42,7 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {}
 
-  public get options(): NgxMiniProfilerOptions {
+  public get options(): NgxMiniProfilerDefaultOptions {
     return this.profilerOptions;
   }
 

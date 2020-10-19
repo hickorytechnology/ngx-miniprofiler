@@ -2,17 +2,18 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Inject,
   Input,
   OnDestroy,
   OnInit,
+  Optional,
   ViewEncapsulation,
 } from '@angular/core';
 import { DialogService } from '@ngneat/dialog';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { IProfiler } from '../../models/profiler';
 import { ITiming } from '../../models/timing';
-import { NgxMiniProfilerOptions } from '../../services/ngx-miniprofiler-options';
-import { NgxMiniprofilerService } from '../../services/ngx-miniprofiler.service';
+import { NgxMiniProfilerDefaultOptions, NGX_MINIPROFILER_DEFAULT_OPTIONS } from '../../ngx-miniprofiler-options';
 import { NgxMiniProfilerQueryDialogComponent } from '../ngx-miniprofiler-query-dialog/ngx-miniprofiler-query-dialog.component';
 
 @Component({
@@ -34,10 +35,11 @@ export class NgxMiniProfilerTimingsComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
 
   constructor(
-    private profilerService: NgxMiniprofilerService,
-    private profilerOptions: NgxMiniProfilerOptions,
     private dialog: DialogService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    @Optional()
+    @Inject(NGX_MINIPROFILER_DEFAULT_OPTIONS)
+    private profilerOptions: NgxMiniProfilerDefaultOptions
   ) {}
 
   public ngOnInit(): void {
@@ -51,7 +53,7 @@ export class NgxMiniProfilerTimingsComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  get options(): NgxMiniProfilerOptions {
+  public get options(): NgxMiniProfilerDefaultOptions {
     return this.profilerOptions;
   }
 

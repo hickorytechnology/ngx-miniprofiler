@@ -1,17 +1,22 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Inject, Injectable, Optional } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IProfiler } from '../models/profiler';
 import { ResultRequest } from '../models/result-request';
 import { ITimingInfo } from '../models/timing';
-import { NgxMiniProfilerOptions } from './ngx-miniprofiler-options';
+import { NgxMiniProfilerDefaultOptions, NGX_MINIPROFILER_DEFAULT_OPTIONS } from '../ngx-miniprofiler-options';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NgxMiniprofilerService {
-  constructor(private http: HttpClient, private options: NgxMiniProfilerOptions) {}
+  constructor(
+    private http: HttpClient,
+    @Optional()
+    @Inject(NGX_MINIPROFILER_DEFAULT_OPTIONS)
+    private options: NgxMiniProfilerDefaultOptions
+  ) {}
 
   public container: HTMLDivElement;
   public controls: HTMLDivElement;

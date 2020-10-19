@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.20](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.19...v0.0.20) (2020-10-19)
+
+
+### Bug Fixes
+
+* 🐛 mp-result classname fix ([0c40510](https://github.com/hickorytechnology/ngx-miniprofiler/commit/0c405105b48e4cbbf0eae0b390bdfbeba635e367))
+
 ### [0.0.19](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.18...v0.0.19) (2020-10-19)
 
 

@@ -8,8 +8,9 @@ import { NgxMiniProfilerTimingsComponent } from './components/ngx-miniprofiler-t
 import { NgxMiniProfilerComponent } from './components/ngx-miniprofiler/ngx-miniprofiler.component';
 import { NgxMiniProfilerInterceptor } from './guards/ngx-miniprofiler.interceptor';
 
+export const DialogModuleForRoot = DialogModule.forRoot();
 @NgModule({
-  imports: [CommonModule, HttpClientModule, DialogModule],
+  imports: [CommonModule, HttpClientModule, DialogModuleForRoot],
   declarations: [
     NgxMiniProfilerComponent,
     NgxMiniProfilerResultComponent,

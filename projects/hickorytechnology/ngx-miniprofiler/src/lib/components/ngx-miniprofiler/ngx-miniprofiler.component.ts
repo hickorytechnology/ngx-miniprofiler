@@ -33,7 +33,25 @@ export class NgxMiniProfilerComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
 
   public ngOnInit(): void {
-    this.subscriptions.add(this.profilerService.idUpdated.pipe(switchMap((ids) => this.fetchResults)).subscribe());
+    this.subscriptions.add(
+      this.profilerService.idUpdated
+        .pipe(
+          switchMap((ids) => {
+            return this.profilerService.fetchResults(ids).pipe(
+              switchMap((results) => {
+                let formatted = this.profileResults;
+                formatted = formatted
+                  .concat(results.slice(1))
+                  .sort((x, y) => new Date(x.Started).getTime() - new Date(y.Started).getTime())
+                  .reverse();
+                this.profileResults = formatted;
+                return of(formatted);
+              })
+            );
+          })
+        )
+        .subscribe()
+    );
   }
 
   public ngOnDestroy(): void {

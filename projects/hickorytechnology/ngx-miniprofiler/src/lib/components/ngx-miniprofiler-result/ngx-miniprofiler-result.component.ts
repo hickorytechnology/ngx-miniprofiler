@@ -29,6 +29,8 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy {
   @Input()
   isNew = true;
 
+  public showPopup = false;
+
   constructor(
     private cdr: ChangeDetectorRef,
     @Optional()
@@ -48,6 +50,14 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy {
 
   public get warningClassName(): string {
     return this.result.HasWarning ? 'mp-button-warning' : '';
+  }
+
+  public get popupActiveClassName(): string {
+    return this.showPopup ? 'active' : '';
+  }
+
+  public toggleShowPopup(): void {
+    this.showPopup = !this.showPopup;
   }
 
   /**

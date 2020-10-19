@@ -6,6 +6,7 @@ import {
   OnDestroy,
   OnInit,
   Optional,
+  ViewEncapsulation,
 } from '@angular/core';
 import { DialogRef } from '@ngneat/dialog';
 import { IGapInfo } from '../../models/gaps';
@@ -18,6 +19,7 @@ import { NgxMiniProfilerDefaultOptions, NGX_MINIPROFILER_DEFAULT_OPTIONS } from 
   templateUrl: './ngx-miniprofiler-query-dialog.component.html',
   styleUrls: ['./ngx-miniprofiler-query-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class NgxMiniProfilerQueryDialogComponent implements OnInit, OnDestroy {
   public profilerResult: IProfiler;

@@ -165,7 +165,12 @@ export class NgxMiniprofilerService {
   }
 
   private processProfileResult(profiler: IProfiler): IProfiler {
-    const result: IProfiler = { ...profiler };
+    const result: IProfiler = {
+      ...profiler,
+      CustomTimingStats: {},
+      CustomLinks: profiler.CustomLinks || {},
+      AllCustomTimings: [],
+    };
     const processedTiming = this.processTiming(result.Root, null, 0);
     result.Root = processedTiming;
 

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.27](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.26...v0.0.27) (2020-10-20)
+
+
+### Features
+
+* 🎸 added more timing processing ([55f0fda](https://github.com/hickorytechnology/ngx-miniprofiler/commit/55f0fdad2a1855a93308d67a593b46c58d022445))
+
 ### [0.0.26](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.25...v0.0.26) (2020-10-19)
 
 

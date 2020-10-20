@@ -576,7 +576,7 @@
   left: 0;
 }
 .mp-results.mp-left .mp-controls,
-.mp-results.mp-left.mp-no-controls .mp-result:last-child .mp-button {
+.mp-results.mp-left.mp-no-controls ngx-miniprofiler-result:last-child .mp-button {
   border-bottom-right-radius: var(--mp-result-border-radius);
 }
 .mp-results.mp-left .mp-button,
@@ -587,7 +587,7 @@
   right: 0;
 }
 .mp-results.mp-right .mp-controls,
-.mp-results.mp-right.mp-no-controls .mp-result:last-child .mp-button {
+.mp-results.mp-right.mp-no-controls ngx-miniprofiler-result:last-child .mp-button {
   border-bottom-left-radius: var(--mp-result-border-radius);
 }
 .mp-results.mp-right .mp-button,
@@ -598,7 +598,7 @@
   top: inherit;
   bottom: 0;
 }
-.mp-results.mp-bottomleft .mp-result:first-child .mp-button {
+.mp-results.mp-bottomleft ngx-miniprofiler-result:first-child .mp-button {
   border-top-right-radius: var(--mp-result-border-radius);
 }
 .mp-results.mp-bottomleft .mp-button,
@@ -615,7 +615,7 @@
   bottom: 0;
   right: 0;
 }
-.mp-results.mp-bottomright .mp-result:first-child .mp-button {
+.mp-results.mp-bottomright ngx-miniprofiler-result:first-child .mp-button {
   border-top-left-radius: var(--mp-result-border-radius);
 }
 .mp-results.mp-bottomright .mp-button,

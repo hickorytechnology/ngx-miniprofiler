@@ -2,9 +2,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { EventEmitter, Inject, Injectable, Optional } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IGapInfo, IGapReason, IGapTiming } from '../models/gaps';
 import { IProfiler } from '../models/profiler';
 import { ResultRequest } from '../models/result-request';
-import { ITimingInfo } from '../models/timing';
+import { ICustomTiming, ITiming, ITimingInfo } from '../models/timing';
 import { NgxMiniProfilerDefaultOptions, NGX_MINIPROFILER_DEFAULT_OPTIONS } from '../ngx-miniprofiler-options';
 
 @Injectable({
@@ -141,8 +142,9 @@ export class NgxMiniprofilerService {
           .get<IProfiler>(apiCall, { headers, responseType: 'json' })
           .pipe(
             map((x) => {
+              const processed = this.processProfileResult(x);
               return {
-                ...x,
+                ...processed,
                 Started: this.parseDate(x.Started),
               };
             })
@@ -160,5 +162,209 @@ export class NgxMiniprofilerService {
     }
 
     return value;
+  }
+
+  private processProfileResult(profiler: IProfiler): IProfiler {
+    const result: IProfiler = { ...profiler };
+    const processedTiming = this.processTiming(result.Root, null, 0);
+    result.Root = processedTiming;
+
+    const processedCustomTimings = this.processCustomTimings(result);
+    result.AllCustomTimings = processedCustomTimings;
+
+    return result;
+  }
+
+  private processTiming(timing: ITiming, parent: ITiming, depth: number): ITiming {
+    const processed: ITiming = {
+      ...timing,
+      DurationWithoutChildrenMilliseconds: timing.DurationMilliseconds,
+      DurationOfChildrenMilliseconds: 0,
+      Parent: parent,
+      Depth: depth,
+      HasDuplicateCustomTimings: {},
+      HasWarnings: {},
+    };
+
+    for (const child of timing.Children || []) {
+      const childTiming = this.processTiming(child, timing, depth + 1);
+      processed.DurationWithoutChildrenMilliseconds -= childTiming.DurationMilliseconds;
+      processed.DurationOfChildrenMilliseconds += child.DurationMilliseconds;
+    }
+
+    // do this after sutracting child durations
+    if (processed.DurationWithoutChildrenMilliseconds < this.options.trivialMilliseconds) {
+      processed.IsTrivial = true;
+      // result.HasTrivialTimings = true;
+    }
+
+    if (timing.CustomTimings) {
+      processed.CustomTimingStats = {};
+      processed.HasCustomTimings = true;
+      // result.HasCustomTimings = true;
+
+      for (const customType of Object.keys(timing.CustomTimings)) {
+        const customTimings = timing.CustomTimings[customType] || ([] as ICustomTiming[]);
+        const customStat = {
+          Duration: 0,
+          Count: 0,
+        };
+        const duplicates: { [id: string]: boolean } = {};
+
+        for (const customTiming of customTimings) {
+          // add to the overall list for the queries view
+          // result.AllCustomTimings.push(customTiming);
+          customTiming.Parent = timing;
+          customTiming.CallType = customType;
+
+          customStat.Duration += customTiming.DurationMilliseconds;
+
+          // whether or not duplicate custom timing should be ignored
+          const ignored =
+            customTiming.ExecuteType &&
+            this.options.ignoredDuplicateExecuteTypes.indexOf(customTiming.ExecuteType) > -1;
+          if (!ignored) {
+            customStat.Count++;
+          }
+
+          if (customTiming.Errored) {
+            processed.HasWarnings[customType] = true;
+            // result.HasWarning = true;
+          }
+
+          if (customTiming.CommandString && duplicates[customTiming.CommandString]) {
+            customTiming.IsDuplicate = true;
+            processed.HasDuplicateCustomTimings[customType] = true;
+            // result.HasDuplicateCustomTImings = true;
+          } else if (!ignored) {
+            duplicates[customTiming.CommandString] = true;
+          }
+        }
+
+        processed.CustomTimingStats[customType] = customStat;
+        // if (!result.CustomTimingStats[customType]) {
+        //   result.CustomTimingStats[customType] = {
+        //     Duration: 0,
+        //     Count: 0
+        //   };
+        // }
+        // result.CustomTimingStats[customType].Duration += customStat.Duration;
+        // result.CustomTimingStats[customType].Count += customStat.Count;
+      }
+    }
+
+    return processed;
+  }
+
+  private processCustomTimings(profiler: IProfiler): ICustomTiming[] {
+    const newProfiler: IProfiler = { ...profiler };
+    const processedTiming = this.processCustomTimes(newProfiler.Root);
+    newProfiler.Root = processedTiming;
+
+    // sort processed timing results by time
+    const result = newProfiler.AllCustomTimings;
+    result.sort((a, b) => a.StartMilliseconds - b.StartMilliseconds);
+
+    let time = 0;
+    result.forEach((elem) => {
+      elem.PrevGap = {
+        duration: (elem.StartMilliseconds - time).toFixed(2),
+        start: time,
+        finish: elem.StartMilliseconds,
+      } as IGapInfo;
+
+      elem.PrevGap.Reason = this.determineGap(elem.PrevGap, profiler.Root, null);
+
+      time = elem.StartMilliseconds + elem.DurationMilliseconds;
+    });
+
+    if (result.length > 0) {
+      const me = result[result.length - 1];
+      me.NextGap = {
+        duration: (profiler.Root.DurationMilliseconds - time).toFixed(2),
+        start: time,
+        finish: profiler.Root.DurationMilliseconds,
+      } as IGapInfo;
+      me.NextGap.Reason = this.determineGap(me.NextGap, profiler.Root, null);
+    }
+
+    return result;
+  }
+
+  private processCustomTimes(timing: ITiming): ITiming {
+    const processed: ITiming = { ...timing };
+    const duration: IGapTiming = {
+      start: timing.StartMilliseconds,
+      finish: timing.StartMilliseconds + timing.DurationMilliseconds,
+    } as IGapTiming;
+
+    processed.richTiming = [duration];
+    if (processed.Parent != null) {
+      processed.Parent.richTiming = this.removeDuration(processed.Parent.richTiming, duration);
+    }
+
+    const processedChildTimings: ITiming[] = [];
+    for (const child of timing.Children || []) {
+      const processedChildTiming = this.processCustomTimes(child);
+      processedChildTimings.push(processedChildTiming);
+    }
+
+    processed.Children = processedChildTimings;
+
+    return processed;
+  }
+
+  private removeDuration(list: IGapTiming[], duration: IGapTiming): IGapTiming[] {
+    const newList: IGapTiming[] = [];
+    for (const item of list) {
+      if (duration.start > item.start) {
+        if (duration.start > item.finish) {
+          newList.push(item);
+          continue;
+        }
+        newList.push({ start: item.start, finish: duration.start } as IGapTiming);
+      }
+
+      if (duration.finish < item.finish) {
+        if (duration.finish < item.start) {
+          newList.push(item);
+          continue;
+        }
+        newList.push({ start: duration.finish, finish: item.finish } as IGapTiming);
+      }
+    }
+
+    return newList;
+  }
+
+  private determineGap(gap: IGapInfo, node: ITiming, match: IGapReason): IGapReason {
+    const overlap = this.determineOverlap(gap, node);
+    if (match == null || overlap > match.duration) {
+      match = { name: node.Name, duration: overlap };
+    } else if (match.name === node.Name) {
+      match.duration += overlap;
+    }
+
+    for (const child of node.Children || []) {
+      match = this.determineGap(gap, child, match);
+    }
+
+    return match;
+  }
+
+  private determineOverlap(gap: IGapInfo, node: ITiming): number {
+    let overlap = 0;
+    for (const current of node.richTiming) {
+      if (current.start > gap.finish) {
+        break;
+      }
+      if (current.finish < gap.start) {
+        continue;
+      }
+
+      overlap += Math.min(gap.finish, current.finish) - Math.max(gap.start, current.start);
+    }
+
+    return overlap;
   }
 }

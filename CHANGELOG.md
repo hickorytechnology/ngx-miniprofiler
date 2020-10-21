@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.40](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.39...v0.0.40) (2020-10-21)
+
+
+### Bug Fixes
+
+* 🐛 added missing table data to correct bad styling ([efd4657](https://github.com/hickorytechnology/ngx-miniprofiler/commit/efd46579df4f436926729b6e985e883b44a01771))
+
 ### [0.0.39](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.38...v0.0.39) (2020-10-21)
 
 

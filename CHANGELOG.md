@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.35](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.34...v0.0.35) (2020-10-21)
+
+
+### Bug Fixes
+
+* 🐛 removed remaining immutable implementation ([b1f10a0](https://github.com/hickorytechnology/ngx-miniprofiler/commit/b1f10a03e8f90150b321523795647fd5585b1e8a))
+
 ### [0.0.34](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.33...v0.0.34) (2020-10-21)
 
 

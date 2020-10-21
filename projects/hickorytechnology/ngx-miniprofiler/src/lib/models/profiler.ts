@@ -6,13 +6,13 @@ export interface IProfiler {
   Started: Date;
   DurationMilliseconds: number;
   MachineName: string;
-  CustomLinks: { [id: string]: string };
+  CustomLinks: Record<string, string>;
   Root: ITiming;
   ClientTimings: IClientTimings;
   User: string;
   HasUserViewed: boolean;
   // additive on client side
-  CustomTimingStats: { [id: string]: ICustomTimingStat };
+  CustomTimingStats: Record<string, ICustomTimingStat>;
   HasCustomTimings: boolean;
   HasDuplicateCustomTimings: boolean;
   HasWarning: boolean;

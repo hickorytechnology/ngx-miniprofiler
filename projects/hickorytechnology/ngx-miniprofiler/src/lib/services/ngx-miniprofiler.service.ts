@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { IGapInfo, IGapReason, IGapTiming } from '../models/gaps';
 import { IProfiler } from '../models/profiler';
 import { ResultRequest } from '../models/result-request';
-import { ICustomTiming, ITiming, ITimingInfo } from '../models/timing';
+import { ICustomTiming, ICustomTimingStat, ITiming, ITimingInfo } from '../models/timing';
 import { NgxMiniProfilerDefaultOptions, NGX_MINIPROFILER_DEFAULT_OPTIONS } from '../ngx-miniprofiler-options';
 
 @Injectable({
@@ -171,16 +171,26 @@ export class NgxMiniprofilerService {
       CustomLinks: profiler.CustomLinks || {},
       AllCustomTimings: [],
     };
-    const processedTiming = this.processTiming(result.Root, null, 0);
+    const pt = this.processTiming(result.Root, null, 0);
+    const processedTiming = pt.timing;
+
     result.Root = processedTiming;
 
     const processedCustomTimings = this.processCustomTimings(result);
     result.AllCustomTimings = processedCustomTimings;
 
+    result.HasTrivialTimings = result.Root.IsTrivial;
+    result.HasCustomTimings = result.Root.HasCustomTimings;
+    result.CustomTimingStats = pt.customTimingStats;
+
     return result;
   }
 
-  private processTiming(timing: ITiming, parent: ITiming, depth: number): ITiming {
+  private processTiming(
+    timing: ITiming,
+    parent: ITiming,
+    depth: number
+  ): { timing: ITiming; customTimingStats: Record<string, ICustomTimingStat> } {
     const processed: ITiming = {
       ...timing,
       DurationWithoutChildrenMilliseconds: timing.DurationMilliseconds,
@@ -191,8 +201,11 @@ export class NgxMiniprofilerService {
       HasWarnings: {},
     };
 
+    const customTimingStats = {};
+
     for (const child of timing.Children || []) {
-      const childTiming = this.processTiming(child, timing, depth + 1);
+      const pt = this.processTiming(child, timing, depth + 1);
+      const childTiming = pt.timing;
       processed.DurationWithoutChildrenMilliseconds -= childTiming.DurationMilliseconds;
       processed.DurationOfChildrenMilliseconds += child.DurationMilliseconds;
     }
@@ -247,18 +260,25 @@ export class NgxMiniprofilerService {
         }
 
         processed.CustomTimingStats[customType] = customStat;
-        // if (!result.CustomTimingStats[customType]) {
-        //   result.CustomTimingStats[customType] = {
-        //     Duration: 0,
-        //     Count: 0
-        //   };
-        // }
-        // result.CustomTimingStats[customType].Duration += customStat.Duration;
-        // result.CustomTimingStats[customType].Count += customStat.Count;
+
+        if (customTimingStats[customType]) {
+          customTimingStats[customType] = {
+            Duration: 0,
+            Count: 0,
+          };
+        }
+
+        customTimingStats[customType].Duration += customStat.Duration;
+        customTimingStats[customType].Count += customStat.Count;
       }
+    } else {
+      processed.CustomTimings = {};
     }
 
-    return processed;
+    return {
+      timing: processed,
+      customTimingStats,
+    };
   }
 
   private processCustomTimings(profiler: IProfiler): ICustomTiming[] {

@@ -55,6 +55,7 @@
             </div>
             <span title="Debug Info">🔍</span>`;
         </td>
+        <td *ngIf="!timing.DebugInfo"></td>
 
         <td class="mp-label" [title]="encode(timing.Name)"
           [style.padding-left.px]="timing.Depth > 0 ? timing.Depth * 11 : 0">
@@ -75,7 +76,7 @@
 
         <td class="mp-duration" *ngFor="let tk of customTimingTypes">
           <a href="#" class="{{ queriesClassName(timing, tk) }}" [title]="queriesTitle(timing, tk)"
-            (click)="openQueryDialog(timing)">
+            (click)="openQueryDialog(timing, $event)">
             {{ duration(result.CustomTimingStats[tk].Duration) }}
             ({{ result.CustomTimingStats[tk].Count }})
             <span class="mp-warning" *ngIf="timing.HasDuplicateCustomTimings[tk] || timing.HasWarnings[tk]">!</span>

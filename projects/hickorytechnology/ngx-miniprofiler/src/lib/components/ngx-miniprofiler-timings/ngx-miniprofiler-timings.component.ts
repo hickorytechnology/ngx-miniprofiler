@@ -121,7 +121,8 @@ export class NgxMiniProfilerTimingsComponent implements OnInit, OnDestroy {
     return (milliseconds || 0).toFixed(decimalPlaces === undefined ? 1 : decimalPlaces);
   }
 
-  public openQueryDialog(timing: ITiming): void {
+  public openQueryDialog(timing: ITiming, event: Event): void {
+    event.preventDefault();
     const dialogRef = this.dialog.open(NgxMiniProfilerQueryDialogComponent, {
       data: {
         profilerResult: this.result,

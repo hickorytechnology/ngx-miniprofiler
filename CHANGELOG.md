@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.30](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.29...v0.0.30) (2020-10-21)
+
+
+### Bug Fixes
+
+* 🐛 wrong conditional operator ([30f047b](https://github.com/hickorytechnology/ngx-miniprofiler/commit/30f047b57ee6fcceaf7b5177aa982253eeee015e))
+
 ### [0.0.29](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.28...v0.0.29) (2020-10-21)
 
 

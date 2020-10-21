@@ -171,7 +171,7 @@ export class NgxMiniprofilerService {
       CustomLinks: profiler.CustomLinks || {},
       AllCustomTimings: [],
     };
-    this.processTiming(profiler, result.Root, null, 0);
+    this.processTiming(result, result.Root, null, 0);
     this.processCustomTimings(result);
 
     // const processedCustomTimings = this.processCustomTimings(result);

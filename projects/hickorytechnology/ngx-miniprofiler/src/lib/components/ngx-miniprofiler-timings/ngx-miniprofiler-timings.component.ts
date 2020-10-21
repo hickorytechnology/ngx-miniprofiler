@@ -86,7 +86,7 @@ export class NgxMiniProfilerTimingsComponent implements OnInit, OnDestroy {
   public queriesTitle(timing: ITiming, timingName: string): string {
     const dur = this.duration(this.result.CustomTimingStats[timingName].Duration);
     const count = this.result.CustomTimingStats[timingName].Count;
-    const suffix = this.result.HasDuplicateCustomTimings[timingName] ? '; duplicate calls detected!' : '';
+    const suffix = timing.HasDuplicateCustomTimings[timingName] ? '; duplicate calls detected!' : '';
     return `${dur} ms in ${count} ${this.encode(timingName)} call(s)${suffix}`;
   }
 

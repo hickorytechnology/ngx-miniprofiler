@@ -204,7 +204,7 @@ export class NgxMiniprofilerService {
     const customTimingStats: Record<string, ICustomTimingStat> = {};
 
     for (const child of timing.Children || []) {
-      const pt = this.processTiming(child, timing, depth + 1);
+      const pt = this.processTiming(child, processed, depth + 1);
       const childTiming = pt.timing;
       processed.DurationWithoutChildrenMilliseconds -= childTiming.DurationMilliseconds;
       processed.DurationOfChildrenMilliseconds += child.DurationMilliseconds;

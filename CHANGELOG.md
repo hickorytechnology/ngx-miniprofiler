@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.38](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.37...v0.0.38) (2020-10-21)
+
+
+### Bug Fixes
+
+* 🐛 duplicate custom timing check ([ec1ff2f](https://github.com/hickorytechnology/ngx-miniprofiler/commit/ec1ff2f821f97d8a53cd809d0160646c5ad4f3cb))
+
 ### [0.0.37](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.36...v0.0.37) (2020-10-21)
 
 

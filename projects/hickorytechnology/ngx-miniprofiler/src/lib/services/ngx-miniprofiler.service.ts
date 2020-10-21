@@ -171,26 +171,20 @@ export class NgxMiniprofilerService {
       CustomLinks: profiler.CustomLinks || {},
       AllCustomTimings: [],
     };
-    const pt = this.processTiming(result.Root, null, 0);
-    const processedTiming = pt.timing;
+    this.processTiming(profiler, result.Root, null, 0);
+    this.processCustomTimings(result);
 
-    result.Root = processedTiming;
+    // const processedCustomTimings = this.processCustomTimings(result);
+    // result.AllCustomTimings = processedCustomTimings;
 
-    const processedCustomTimings = this.processCustomTimings(result);
-    result.AllCustomTimings = processedCustomTimings;
-
-    result.HasTrivialTimings = result.Root.IsTrivial;
-    result.HasCustomTimings = result.Root.HasCustomTimings;
-    result.CustomTimingStats = pt.customTimingStats;
+    // result.HasTrivialTimings = result.Root.IsTrivial;
+    // result.HasCustomTimings = result.Root.HasCustomTimings;
+    // result.CustomTimingStats = pt.customTimingStats;
 
     return result;
   }
 
-  private processTiming(
-    timing: ITiming,
-    parent: ITiming,
-    depth: number
-  ): { timing: ITiming; customTimingStats: Record<string, ICustomTimingStat> } {
+  private processTiming(profiler: IProfiler, timing: ITiming, parent: ITiming, depth: number): IProfiler {
     timing.DurationWithoutChildrenMilliseconds = timing.DurationMilliseconds;
     timing.DurationOfChildrenMilliseconds = 0;
     timing.Parent = parent;
@@ -198,25 +192,22 @@ export class NgxMiniprofilerService {
     timing.HasDuplicateCustomTimings = {};
     timing.HasWarnings = {};
 
-    const customTimingStats: Record<string, ICustomTimingStat> = {};
-
     for (const child of timing.Children || []) {
-      const pt = this.processTiming(child, timing, depth + 1);
-      const childTiming = pt.timing;
-      timing.DurationWithoutChildrenMilliseconds -= childTiming.DurationMilliseconds;
+      this.processTiming(profiler, child, timing, depth + 1);
+      timing.DurationWithoutChildrenMilliseconds -= child.DurationMilliseconds;
       timing.DurationOfChildrenMilliseconds += child.DurationMilliseconds;
     }
 
     // do this after sutracting child durations
     if (timing.DurationWithoutChildrenMilliseconds < this.options.trivialMilliseconds) {
       timing.IsTrivial = true;
-      // result.HasTrivialTimings = true;
+      profiler.HasTrivialTimings = true;
     }
 
     if (timing.CustomTimings) {
       timing.CustomTimingStats = {};
       timing.HasCustomTimings = true;
-      // result.HasCustomTimings = true;
+      profiler.HasCustomTimings = true;
 
       for (const customType of Object.keys(timing.CustomTimings)) {
         const customTimings = timing.CustomTimings[customType] || ([] as ICustomTiming[]);
@@ -228,7 +219,7 @@ export class NgxMiniprofilerService {
 
         for (const customTiming of customTimings) {
           // add to the overall list for the queries view
-          // result.AllCustomTimings.push(customTiming);
+          profiler.AllCustomTimings.push(customTiming);
           customTiming.Parent = timing;
           customTiming.CallType = customType;
 
@@ -244,37 +235,33 @@ export class NgxMiniprofilerService {
 
           if (customTiming.Errored) {
             timing.HasWarnings[customType] = true;
-            // result.HasWarning = true;
+            profiler.HasWarning = true;
           }
 
           if (customTiming.CommandString && duplicates[customTiming.CommandString]) {
             customTiming.IsDuplicate = true;
             timing.HasDuplicateCustomTimings[customType] = true;
-            // result.HasDuplicateCustomTImings = true;
+            profiler.HasDuplicateCustomTimings = true;
           } else if (!ignored) {
             duplicates[customTiming.CommandString] = true;
           }
         }
 
         timing.CustomTimingStats[customType] = customStat;
-
-        if (!customTimingStats[customType]) {
-          customTimingStats[customType] = {
+        if (!profiler.CustomTimingStats[customType]) {
+          profiler.CustomTimingStats[customType] = {
             Duration: 0,
             Count: 0,
           };
         }
-        customTimingStats[customType].Duration += customStat.Duration;
-        customTimingStats[customType].Count += customStat.Count;
+        profiler.CustomTimingStats[customType].Duration += customStat.Duration;
+        profiler.CustomTimingStats[customType].Count += customStat.Count;
       }
     } else {
       timing.CustomTimings = {};
     }
 
-    return {
-      timing,
-      customTimingStats,
-    };
+    return profiler;
   }
 
   private processCustomTimings(profiler: IProfiler): ICustomTiming[] {

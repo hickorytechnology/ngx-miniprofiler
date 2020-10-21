@@ -278,12 +278,11 @@ export class NgxMiniprofilerService {
   }
 
   private processCustomTimings(profiler: IProfiler): ICustomTiming[] {
-    const newProfiler: IProfiler = { ...profiler };
-    const processedTiming = this.processCustomTimes(newProfiler.Root);
-    newProfiler.Root = processedTiming;
+    const result = profiler.AllCustomTimings;
+    result.sort((a, b) => a.StartMilliseconds - b.StartMilliseconds);
 
-    // sort processed timing results by time
-    const result = newProfiler.AllCustomTimings;
+    this.processCustomTimes(profiler.Root);
+    // sort results by time
     result.sort((a, b) => a.StartMilliseconds - b.StartMilliseconds);
 
     let time = 0;
@@ -312,27 +311,20 @@ export class NgxMiniprofilerService {
     return result;
   }
 
-  private processCustomTimes(timing: ITiming): ITiming {
-    const processed: ITiming = { ...timing };
-    const duration: IGapTiming = {
-      start: timing.StartMilliseconds,
-      finish: timing.StartMilliseconds + timing.DurationMilliseconds,
+  private processCustomTimes(elem: ITiming): void {
+    const duration = {
+      start: elem.StartMilliseconds,
+      finish: elem.StartMilliseconds + elem.DurationMilliseconds,
     } as IGapTiming;
 
-    processed.richTiming = [duration];
-    if (processed.Parent != null) {
-      processed.Parent.richTiming = this.removeDuration(processed.Parent.richTiming, duration);
+    elem.richTiming = [duration];
+    if (elem.Parent != null) {
+      elem.Parent.richTiming = this.removeDuration(elem.Parent.richTiming, duration);
     }
 
-    const processedChildTimings: ITiming[] = [];
-    for (const child of timing.Children || []) {
-      const processedChildTiming = this.processCustomTimes(child);
-      processedChildTimings.push(processedChildTiming);
+    for (const child of elem.Children || []) {
+      this.processCustomTimes(child);
     }
-
-    processed.Children = processedChildTimings;
-
-    return processed;
   }
 
   private removeDuration(list: IGapTiming[], duration: IGapTiming): IGapTiming[] {

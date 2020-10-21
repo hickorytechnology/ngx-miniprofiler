@@ -191,34 +191,31 @@ export class NgxMiniprofilerService {
     parent: ITiming,
     depth: number
   ): { timing: ITiming; customTimingStats: Record<string, ICustomTimingStat> } {
-    const processed: ITiming = {
-      ...timing,
-      DurationWithoutChildrenMilliseconds: timing.DurationMilliseconds,
-      DurationOfChildrenMilliseconds: 0,
-      Parent: parent,
-      Depth: depth,
-      HasDuplicateCustomTimings: {},
-      HasWarnings: {},
-    };
+    timing.DurationWithoutChildrenMilliseconds = timing.DurationMilliseconds;
+    timing.DurationOfChildrenMilliseconds = 0;
+    timing.Parent = parent;
+    timing.Depth = depth;
+    timing.HasDuplicateCustomTimings = {};
+    timing.HasWarnings = {};
 
     const customTimingStats: Record<string, ICustomTimingStat> = {};
 
-    for (const child of processed.Children || []) {
-      const pt = this.processTiming(child, processed, depth + 1);
+    for (const child of timing.Children || []) {
+      const pt = this.processTiming(child, timing, depth + 1);
       const childTiming = pt.timing;
-      processed.DurationWithoutChildrenMilliseconds -= childTiming.DurationMilliseconds;
-      processed.DurationOfChildrenMilliseconds += child.DurationMilliseconds;
+      timing.DurationWithoutChildrenMilliseconds -= childTiming.DurationMilliseconds;
+      timing.DurationOfChildrenMilliseconds += child.DurationMilliseconds;
     }
 
     // do this after sutracting child durations
-    if (processed.DurationWithoutChildrenMilliseconds < this.options.trivialMilliseconds) {
-      processed.IsTrivial = true;
+    if (timing.DurationWithoutChildrenMilliseconds < this.options.trivialMilliseconds) {
+      timing.IsTrivial = true;
       // result.HasTrivialTimings = true;
     }
 
     if (timing.CustomTimings) {
-      processed.CustomTimingStats = {};
-      processed.HasCustomTimings = true;
+      timing.CustomTimingStats = {};
+      timing.HasCustomTimings = true;
       // result.HasCustomTimings = true;
 
       for (const customType of Object.keys(timing.CustomTimings)) {
@@ -246,20 +243,20 @@ export class NgxMiniprofilerService {
           }
 
           if (customTiming.Errored) {
-            processed.HasWarnings[customType] = true;
+            timing.HasWarnings[customType] = true;
             // result.HasWarning = true;
           }
 
           if (customTiming.CommandString && duplicates[customTiming.CommandString]) {
             customTiming.IsDuplicate = true;
-            processed.HasDuplicateCustomTimings[customType] = true;
+            timing.HasDuplicateCustomTimings[customType] = true;
             // result.HasDuplicateCustomTImings = true;
           } else if (!ignored) {
             duplicates[customTiming.CommandString] = true;
           }
         }
 
-        processed.CustomTimingStats[customType] = customStat;
+        timing.CustomTimingStats[customType] = customStat;
 
         if (!customTimingStats[customType]) {
           customTimingStats[customType] = {
@@ -271,11 +268,11 @@ export class NgxMiniprofilerService {
         customTimingStats[customType].Count += customStat.Count;
       }
     } else {
-      processed.CustomTimings = {};
+      timing.CustomTimings = {};
     }
 
     return {
-      timing: processed,
+      timing,
       customTimingStats,
     };
   }

@@ -201,7 +201,7 @@ export class NgxMiniprofilerService {
       HasWarnings: {},
     };
 
-    const customTimingStats = {};
+    const customTimingStats: Record<string, ICustomTimingStat> = {};
 
     for (const child of timing.Children || []) {
       const pt = this.processTiming(child, timing, depth + 1);
@@ -261,13 +261,12 @@ export class NgxMiniprofilerService {
 
         processed.CustomTimingStats[customType] = customStat;
 
-        if (customTimingStats[customType]) {
+        if (!customTimingStats[customType]) {
           customTimingStats[customType] = {
             Duration: 0,
             Count: 0,
           };
         }
-
         customTimingStats[customType].Duration += customStat.Duration;
         customTimingStats[customType].Count += customStat.Count;
       }

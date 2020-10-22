@@ -1,10 +1,10 @@
 <div class="mp-result" [class.active]="showPopup">
-  <div class="mp-button {{warningClassName}}" [title]="encode(result.Name)" (click)="toggleShowPopup()">
+  <div #buttonRef class="mp-button {{warningClassName}}" [title]="encode(result.Name)" (click)="toggleShowPopup()">
     <span class="mp-number">{{ duration(result.DurationMilliseconds)}} <span class="mp-unit">ms</span></span>
     <span class="mp-warning" *ngIf="result.HasDuplicateCustomTimings || result.HasWarning">!</span>
   </div>
 
-  <div class="mp-popup">
+  <div class="mp-popup" #popupRef>
     <div class="mp-info">
       <div>
         <div class="mp-name">{{encode(result.Name)}}</div>

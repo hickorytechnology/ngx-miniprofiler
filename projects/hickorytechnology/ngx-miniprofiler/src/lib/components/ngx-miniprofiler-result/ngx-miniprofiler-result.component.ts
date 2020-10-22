@@ -1,7 +1,9 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   HostBinding,
   Inject,
@@ -10,9 +12,12 @@ import {
   OnInit,
   Optional,
   Output,
+  Renderer2,
+  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { IProfiler } from '../../models/profiler';
+import { RenderPosition } from '../../models/render-position.enum';
 import { NgxMiniProfilerDefaultOptions, NGX_MINIPROFILER_DEFAULT_OPTIONS } from '../../ngx-miniprofiler-options';
 
 @Component({
@@ -22,7 +27,7 @@ import { NgxMiniProfilerDefaultOptions, NGX_MINIPROFILER_DEFAULT_OPTIONS } from 
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy {
+export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy, AfterViewInit {
   // @HostBinding('class')
   // rootClass: string;
 
@@ -35,16 +40,51 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy {
   @Output()
   buttonClick = new EventEmitter();
 
+  @ViewChild('buttonRef')
+  buttonRef: ElementRef;
+
+  @ViewChild('popupRef')
+  popupRef: ElementRef;
+
   public showPopup = false;
 
   constructor(
     private cdr: ChangeDetectorRef,
+    private renderer: Renderer2,
     @Optional()
     @Inject(NGX_MINIPROFILER_DEFAULT_OPTIONS)
     private profilerOptions: NgxMiniProfilerDefaultOptions
   ) {}
 
   public ngOnInit(): void {}
+
+  ngAfterViewInit(): void {
+    const button = this.buttonRef.nativeElement;
+    const popup = this.popupRef.nativeElement;
+    const pos = this.options.renderPosition;
+
+    // move left or right, based on config
+    this.renderer.setStyle(
+      popup,
+      pos === RenderPosition.Left || pos === RenderPosition.BottomLeft ? 'left' : 'right',
+      button.offsetWidth - 1
+    );
+
+    if (pos === RenderPosition.BottomLeft || pos === RenderPosition.BottomRight) {
+      // calculate get the mp-button's offsets
+      const bottom = window.innerHeight - button.getBoundingClientRect().top - button.offsetHeight + window.scrollY;
+
+      this.renderer.setStyle(popup, 'bottom', 0);
+      this.renderer.setStyle(popup, 'max-height', `calc(100vh - ${bottom + 25}px)`);
+    } else {
+      this.renderer.setStyle(popup, 'top', 0);
+      this.renderer.setStyle(
+        popup,
+        'max-height',
+        `calc(100vh - ${button.getBoundingClientRect().top - window.window.scrollY + 25}px)`
+      );
+    }
+  }
 
   public ngOnDestroy(): void {}
 

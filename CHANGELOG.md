@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.44](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.43...v0.0.44) (2020-10-22)
+
+
+### Bug Fixes
+
+* 🐛 applied change detection when setting popup visibility ([0da4c5c](https://github.com/hickorytechnology/ngx-miniprofiler/commit/0da4c5c3ce706eedb8ae9e7e2c53cab93c4d5bc6))
+
 ### [0.0.43](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.42...v0.0.43) (2020-10-22)
 
 

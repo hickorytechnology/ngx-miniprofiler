@@ -1,0 +1,9 @@
+ngneat-dialog {
+  .ngneat-dialog-backdrop {
+    z-index: 2147483641;
+
+    .ngneat-dialog-content {
+      overflow: auto;
+    }
+  }
+}

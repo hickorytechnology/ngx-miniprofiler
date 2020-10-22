@@ -9,6 +9,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { DialogRef } from '@ngneat/dialog';
+import { highlightAuto } from 'highlight.js';
 import { IGapInfo } from '../../models/gaps';
 import { IProfiler } from '../../models/profiler';
 import { ITiming } from '../../models/timing';
@@ -55,6 +56,10 @@ export class NgxMiniProfilerQueryDialogComponent implements OnInit, OnDestroy {
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;');
+  }
+
+  public highlight(encoded: string): string {
+    return highlightAuto(encoded).value;
   }
 
   /**

@@ -5,6 +5,7 @@
     "@angular/common": "^10.1.6",
     "@angular/core": "^10.1.6",
     "@ngneat/dialog": "^1.0.2",
+    "highlight.js": "^10.3.1",
     "rxjs": "~6.6.0"
   },
   "dependencies": {

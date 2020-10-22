@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.45](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.44...v0.0.45) (2020-10-22)
+
+
+### Features
+
+* 🎸 matched query dialog z-index to mp popup value ([82c4a44](https://github.com/hickorytechnology/ngx-miniprofiler/commit/82c4a442b4da747d9d3dcdbf760ba9f76c539435))
+
 ### [0.0.44](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.43...v0.0.44) (2020-10-22)
 
 

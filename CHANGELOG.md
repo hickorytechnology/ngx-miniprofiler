@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.42](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.41...v0.0.42) (2020-10-22)
+
+
+### Bug Fixes
+
+* 🐛 added missing px identifier for popup positioning ([7ab1272](https://github.com/hickorytechnology/ngx-miniprofiler/commit/7ab12723e6601549eeb4f7e2e166772c5c93ad52))
+
 ### [0.0.41](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.40...v0.0.41) (2020-10-22)
 
 

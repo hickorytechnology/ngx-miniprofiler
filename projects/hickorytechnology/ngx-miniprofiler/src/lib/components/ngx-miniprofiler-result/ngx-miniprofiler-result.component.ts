@@ -134,6 +134,8 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy, AfterV
     if (!showPopup && this.timingsDialogRef != null) {
       this.timingsDialogRef.close();
     }
+
+    this.cdr.markForCheck();
   }
 
   /**

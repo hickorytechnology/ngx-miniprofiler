@@ -2,14 +2,16 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Inject,
   Input,
   OnDestroy,
   OnInit,
   Optional,
+  Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { DialogService } from '@ngneat/dialog';
+import { DialogRef, DialogService } from '@ngneat/dialog';
 import { Subscription } from 'rxjs';
 import { IProfiler } from '../../models/profiler';
 import { ITiming } from '../../models/timing';
@@ -26,6 +28,9 @@ import { NgxMiniProfilerQueryDialogComponent } from '../ngx-miniprofiler-query-d
 export class NgxMiniProfilerTimingsComponent implements OnInit, OnDestroy {
   @Input()
   result: IProfiler;
+
+  @Output()
+  timingsDialogOpen = new EventEmitter<DialogRef>();
 
   public customTimingTypes: any[] = [];
   public customTimings: any[] = [];
@@ -124,11 +129,12 @@ export class NgxMiniProfilerTimingsComponent implements OnInit, OnDestroy {
   public openQueryDialog(timing: ITiming, event: Event): void {
     event.preventDefault();
     const dialogRef = this.dialog.open(NgxMiniProfilerQueryDialogComponent, {
-      size: 'lg',
+      size: 'fullScreen',
       data: {
         profilerResult: this.result,
         timing,
       },
     });
+    this.timingsDialogOpen.emit(dialogRef);
   }
 }

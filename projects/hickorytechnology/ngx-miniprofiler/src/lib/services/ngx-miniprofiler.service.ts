@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { EventEmitter, Inject, Injectable, Optional } from '@angular/core';
-import { forkJoin, Observable } from 'rxjs';
+import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IGapInfo, IGapReason, IGapTiming } from '../models/gaps';
 import { IProfiler } from '../models/profiler';
@@ -23,6 +23,9 @@ export class NgxMiniprofilerService {
   public controls: HTMLDivElement;
   public fetchStatus: { [id: string]: string } = {}; // so we never pull down a profiler twice
   public idUpdated = new EventEmitter<string[]>();
+
+  private selectedDataSource = new BehaviorSubject<string>(null);
+  selectedProfilerResult = this.selectedDataSource.asObservable();
 
   private miniProfilerIds: string[] = [];
   private savedJson: IProfiler[] = [];
@@ -116,6 +119,14 @@ export class NgxMiniprofilerService {
   ];
 
   public highlight = (elem: HTMLElement): void => undefined;
+
+  /**
+   * Updates the selected profiler record.
+   * @param id the selected profiler ID
+   */
+  public selectProfileResult(id: string): void {
+    this.selectedDataSource.next(id);
+  }
 
   /**
    * asd

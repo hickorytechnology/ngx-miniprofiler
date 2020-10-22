@@ -16,9 +16,12 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import { DialogRef } from '@ngneat/dialog';
+import { Subscription } from 'rxjs';
 import { IProfiler } from '../../models/profiler';
 import { RenderPosition } from '../../models/render-position.enum';
 import { NgxMiniProfilerDefaultOptions, NGX_MINIPROFILER_DEFAULT_OPTIONS } from '../../ngx-miniprofiler-options';
+import { NgxMiniprofilerService } from '../../services/ngx-miniprofiler.service';
 
 @Component({
   selector: 'ngx-miniprofiler-result',
@@ -47,8 +50,12 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy, AfterV
   popupRef: ElementRef;
 
   public showPopup = false;
+  public timingsDialogRef: DialogRef;
+
+  private subscriptions = new Subscription();
 
   constructor(
+    private profilerService: NgxMiniprofilerService,
     private cdr: ChangeDetectorRef,
     private renderer: Renderer2,
     @Optional()
@@ -56,7 +63,15 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy, AfterV
     private profilerOptions: NgxMiniProfilerDefaultOptions
   ) {}
 
-  public ngOnInit(): void {}
+  public ngOnInit(): void {
+    this.subscriptions.add(
+      this.profilerService.selectedProfilerResult.subscribe((id) => {
+        if (id !== this.result.Id) {
+          this.setShowPopup(false);
+        }
+      })
+    );
+  }
 
   ngAfterViewInit(): void {
     const button = this.buttonRef.nativeElement;
@@ -86,7 +101,9 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy, AfterV
     }
   }
 
-  public ngOnDestroy(): void {}
+  public ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
 
   public get options(): NgxMiniProfilerDefaultOptions {
     return this.profilerOptions;
@@ -98,7 +115,25 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy, AfterV
 
   public toggleShowPopup(): void {
     this.showPopup = !this.showPopup;
+
+    if (this.showPopup) {
+      this.profilerService.selectProfileResult(this.result.Id);
+    } else {
+      this.profilerService.selectProfileResult(null);
+
+      if (this.timingsDialogRef != null) {
+        this.timingsDialogRef.close();
+      }
+    }
+
     this.cdr.markForCheck();
+  }
+
+  public setShowPopup(showPopup: boolean): void {
+    this.showPopup = showPopup;
+    if (!showPopup && this.timingsDialogRef != null) {
+      this.timingsDialogRef.close();
+    }
   }
 
   /**
@@ -124,6 +159,10 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy, AfterV
       return '';
     }
     return (milliseconds || 0).toFixed(decimalPlaces === undefined ? 1 : decimalPlaces);
+  }
+
+  public onTimingsDialogOpen(dialogRef: DialogRef): void {
+    this.timingsDialogRef = dialogRef;
   }
 
   // private buildRootClass(): void {

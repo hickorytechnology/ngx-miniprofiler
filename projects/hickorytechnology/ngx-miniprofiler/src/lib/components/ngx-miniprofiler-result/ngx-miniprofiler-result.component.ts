@@ -67,7 +67,7 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy, AfterV
     this.renderer.setStyle(
       popup,
       pos === RenderPosition.Left || pos === RenderPosition.BottomLeft ? 'left' : 'right',
-      button.offsetWidth - 1
+      `${button.offsetWidth - 1}px`
     );
 
     if (pos === RenderPosition.BottomLeft || pos === RenderPosition.BottomRight) {

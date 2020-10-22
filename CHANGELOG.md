@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.43](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.42...v0.0.43) (2020-10-22)
+
+
+### Features
+
+* 🎸 toggle other profiler results when another is selected ([d2a59fb](https://github.com/hickorytechnology/ngx-miniprofiler/commit/d2a59fb3f3acdc5dc96a69efb1bc7e95ef55bbab))
+
 ### [0.0.42](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.41...v0.0.42) (2020-10-22)
 
 

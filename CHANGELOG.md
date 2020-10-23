@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.48](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.47...v0.0.48) (2020-10-23)
+
+
+### Bug Fixes
+
+* 🐛 flip the highlight call to render encoded text ([0ff10ea](https://github.com/hickorytechnology/ngx-miniprofiler/commit/0ff10ea548705c42ca61a3490b109325928a7429))
+
 ### [0.0.47](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.46...v0.0.47) (2020-10-23)
 
 

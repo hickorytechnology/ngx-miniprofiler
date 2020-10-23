@@ -33,7 +33,6 @@ export class NgxMiniProfilerComponent implements OnInit, OnDestroy {
   public results$: Observable<IProfiler[]>;
   public profileResults: IProfiler[] = [];
 
-  private miniProfilerIds: Set<string> = new Set();
   private subscriptions = new Subscription();
 
   public ngOnInit(): void {
@@ -45,7 +44,7 @@ export class NgxMiniProfilerComponent implements OnInit, OnDestroy {
               switchMap((results) => {
                 let formatted = this.profileResults;
                 formatted = formatted
-                  .concat(results.slice(1))
+                  .concat(results)
                   .sort((x, y) => new Date(x.Started).getTime() - new Date(y.Started).getTime())
                   .reverse();
                 this.profileResults = formatted;
@@ -77,29 +76,5 @@ export class NgxMiniProfilerComponent implements OnInit, OnDestroy {
     }
 
     return classNameBuilder.join(' ');
-  }
-
-  public idsChanged(ids: string[]): boolean {
-    let result = false;
-    if (this.miniProfilerIds.size !== ids.length) {
-      result = true;
-    }
-
-    this.miniProfilerIds = new Set(ids);
-    return result;
-  }
-
-  public fetchResults(ids: string[]): Observable<IProfiler[]> {
-    return this.profilerService.fetchResults(ids).pipe(
-      switchMap((results) => {
-        let formatted = this.profileResults;
-        formatted = formatted
-          .concat(results)
-          .sort((x, y) => new Date(x.Started).getTime() - new Date(y.Started).getTime())
-          .reverse();
-        this.profileResults = formatted;
-        return of(formatted);
-      })
-    );
   }
 }

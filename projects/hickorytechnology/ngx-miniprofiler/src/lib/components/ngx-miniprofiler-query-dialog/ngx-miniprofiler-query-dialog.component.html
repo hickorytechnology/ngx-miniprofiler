@@ -46,7 +46,7 @@
           <td>
             <div class="query">
               <div class="mp-stack-trace">{{ encode(ct.StackTraceSnippet) }}</div>
-              <pre><code>{{ highlight(encode(ct.CommandString)) }}</code></pre>
+              <pre><code [innerHTML]="highlight(encode(ct.CommandString))"></code></pre>
             </div>
           </td>
         </tr>

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.47](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.46...v0.0.47) (2020-10-23)
+
+
+### Bug Fixes
+
+* 🐛 actually apply the highlight call ([aebb54d](https://github.com/hickorytechnology/ngx-miniprofiler/commit/aebb54de0ce948518c0297c5412295e2a974703f))
+
 ### [0.0.46](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.45...v0.0.46) (2020-10-22)
 
 

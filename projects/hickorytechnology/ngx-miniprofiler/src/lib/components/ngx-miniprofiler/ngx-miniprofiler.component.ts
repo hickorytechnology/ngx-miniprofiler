@@ -94,7 +94,7 @@ export class NgxMiniProfilerComponent implements OnInit, OnDestroy {
       switchMap((results) => {
         let formatted = this.profileResults;
         formatted = formatted
-          .concat(results.slice(1))
+          .concat(results)
           .sort((x, y) => new Date(x.Started).getTime() - new Date(y.Started).getTime())
           .reverse();
         this.profileResults = formatted;

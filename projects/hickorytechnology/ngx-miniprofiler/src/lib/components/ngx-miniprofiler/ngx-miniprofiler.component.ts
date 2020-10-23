@@ -33,7 +33,7 @@ export class NgxMiniProfilerComponent implements OnInit, OnDestroy {
   public results$: Observable<IProfiler[]>;
   public profileResults: IProfiler[] = [];
 
-  private miniProfilerIds: string[] = [];
+  private miniProfilerIds: Set<string> = new Set();
   private subscriptions = new Subscription();
 
   public ngOnInit(): void {
@@ -81,11 +81,11 @@ export class NgxMiniProfilerComponent implements OnInit, OnDestroy {
 
   public idsChanged(ids: string[]): boolean {
     let result = false;
-    if (this.miniProfilerIds.length !== ids.length) {
+    if (this.miniProfilerIds.size !== ids.length) {
       result = true;
     }
 
-    this.miniProfilerIds = ids;
+    this.miniProfilerIds = new Set(ids);
     return result;
   }
 

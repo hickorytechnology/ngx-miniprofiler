@@ -25,4 +25,4 @@ export const DialogModuleForRoot = DialogModule.forRoot();
   ],
   providers: [NgxMiniProfilerInterceptor],
 })
-export class NgxMiniprofilerModule {}
+export class NgxMiniProfilerModule {}

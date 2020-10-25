@@ -21,7 +21,7 @@ import { Subscription } from 'rxjs';
 import { IProfiler } from '../../models/profiler';
 import { RenderPosition } from '../../models/render-position.enum';
 import { NgxMiniProfilerDefaultOptions, NGX_MINIPROFILER_DEFAULT_OPTIONS } from '../../ngx-miniprofiler-options';
-import { NgxMiniprofilerService } from '../../services/ngx-miniprofiler.service';
+import { NgxMiniProfilerService } from '../../services/ngx-miniprofiler.service';
 
 @Component({
   selector: 'ngx-miniprofiler-result',
@@ -55,7 +55,7 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy, AfterV
   private subscriptions = new Subscription();
 
   constructor(
-    private profilerService: NgxMiniprofilerService,
+    private profilerService: NgxMiniProfilerService,
     private cdr: ChangeDetectorRef,
     private renderer: Renderer2,
     @Optional()
@@ -166,25 +166,4 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy, AfterV
   public onTimingsDialogOpen(dialogRef: DialogRef): void {
     this.timingsDialogRef = dialogRef;
   }
-
-  // private buildRootClass(): void {
-  //   const rootClassBuilder: string[] = ['mp-result'];
-  //   if (this.profilerOptions.showTrivial) {
-  //     rootClassBuilder.push('show-trivial');
-  //   }
-
-  //   if (this.profilerOptions.showChildrenTime) {
-  //     rootClassBuilder.push('show-columns');
-  //   }
-
-  //   if (this.isNew) {
-  //     rootClassBuilder.push('new');
-  //   }
-
-  //   if (this.showPopup) {
-  //     rootClassBuilder.push('active');
-  //   }
-
-  //   this.rootClass = rootClassBuilder.join(' ');
-  // }
 }

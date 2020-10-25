@@ -2,11 +2,11 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpResponse } fr
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { NgxMiniprofilerService } from '../services/ngx-miniprofiler.service';
+import { NgxMiniProfilerService } from '../services/ngx-miniprofiler.service';
 
 @Injectable()
 export class NgxMiniProfilerInterceptor implements HttpInterceptor {
-  constructor(private profilerService: NgxMiniprofilerService) {}
+  constructor(private profilerService: NgxMiniProfilerService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (req.headers.has('skip')) {

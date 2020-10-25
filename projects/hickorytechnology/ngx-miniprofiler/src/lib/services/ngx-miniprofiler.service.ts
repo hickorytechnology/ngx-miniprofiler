@@ -4,14 +4,13 @@ import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IGapInfo, IGapReason, IGapTiming } from '../models/gaps';
 import { IProfiler } from '../models/profiler';
-import { ResultRequest } from '../models/result-request';
-import { ICustomTiming, ICustomTimingStat, ITiming, ITimingInfo } from '../models/timing';
+import { ICustomTiming, ITiming, ITimingInfo } from '../models/timing';
 import { NgxMiniProfilerDefaultOptions, NGX_MINIPROFILER_DEFAULT_OPTIONS } from '../ngx-miniprofiler-options';
 
 @Injectable({
   providedIn: 'root',
 })
-export class NgxMiniprofilerService {
+export class NgxMiniProfilerService {
   constructor(
     private http: HttpClient,
     @Optional()

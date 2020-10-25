@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="mp-output">
-      <ngx-miniprofiler-timings [result]="result"></ngx-miniprofiler-timings>
+      <ngx-miniprofiler-timings [result]="result" (timingsDialogOpen)="onTimingsDialogOpen($event)"></ngx-miniprofiler-timings>
     </div>
   </div>
 </div>

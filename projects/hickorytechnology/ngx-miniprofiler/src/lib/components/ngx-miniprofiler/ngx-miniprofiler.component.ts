@@ -12,7 +12,7 @@ import { Observable, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { IProfiler } from '../../models/profiler';
 import { NgxMiniProfilerDefaultOptions, NGX_MINIPROFILER_DEFAULT_OPTIONS } from '../../ngx-miniprofiler-options';
-import { NgxMiniprofilerService } from '../../services/ngx-miniprofiler.service';
+import { NgxMiniProfilerService } from '../../services/ngx-miniprofiler.service';
 
 @Component({
   selector: 'ngx-miniprofiler',
@@ -23,7 +23,7 @@ import { NgxMiniprofilerService } from '../../services/ngx-miniprofiler.service'
 })
 export class NgxMiniProfilerComponent implements OnInit, OnDestroy {
   constructor(
-    private profilerService: NgxMiniprofilerService,
+    private profilerService: NgxMiniProfilerService,
     private cdr: ChangeDetectorRef,
     @Optional()
     @Inject(NGX_MINIPROFILER_DEFAULT_OPTIONS)
@@ -45,8 +45,7 @@ export class NgxMiniProfilerComponent implements OnInit, OnDestroy {
                 let formatted = this.profileResults;
                 formatted = formatted
                   .concat(results)
-                  .sort((x, y) => new Date(x.Started).getTime() - new Date(y.Started).getTime())
-                  .reverse();
+                  .sort((x, y) => new Date(x.Started).getTime() - new Date(y.Started).getTime());
                 this.profileResults = formatted;
                 this.cdr.markForCheck();
                 return of(formatted);

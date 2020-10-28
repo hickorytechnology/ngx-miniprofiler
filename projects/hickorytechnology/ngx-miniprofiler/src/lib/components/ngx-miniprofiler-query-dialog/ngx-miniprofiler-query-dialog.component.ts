@@ -9,7 +9,8 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { DialogRef } from '@ngneat/dialog';
-import { highlightAuto } from 'highlight.js';
+import { registerLanguage, highlight } from 'highlight.js';
+import sql from 'highlight.js/lib/languages/sql';
 import { IGapInfo } from '../../models/gaps';
 import { IProfiler } from '../../models/profiler';
 import { ITiming } from '../../models/timing';
@@ -32,7 +33,9 @@ export class NgxMiniProfilerQueryDialogComponent implements OnInit, OnDestroy {
     @Optional()
     @Inject(NGX_MINIPROFILER_DEFAULT_OPTIONS)
     private profilerOptions: NgxMiniProfilerDefaultOptions
-  ) {}
+  ) {
+    registerLanguage('sql', sql);
+  }
 
   public ngOnInit(): void {
     this.profilerResult = this.dialogRef.data.profilerResult;
@@ -59,7 +62,7 @@ export class NgxMiniProfilerQueryDialogComponent implements OnInit, OnDestroy {
   }
 
   public highlight(encoded: string): string {
-    return highlightAuto(encoded).value;
+    return highlight('sql', encoded).value;
   }
 
   /**

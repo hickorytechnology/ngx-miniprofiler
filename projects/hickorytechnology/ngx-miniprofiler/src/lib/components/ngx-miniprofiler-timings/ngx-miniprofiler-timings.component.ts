@@ -32,10 +32,19 @@ export class NgxMiniProfilerTimingsComponent implements OnInit, OnDestroy {
   @Output()
   timingsDialogOpen = new EventEmitter<DialogRef>();
 
+  @Output()
+  toggleMoreColumns = new EventEmitter<boolean>();
+
+  @Output()
+  toggleTrivialTimings = new EventEmitter<boolean>();
+
   public customTimingTypes: any[] = [];
   public customTimings: any[] = [];
   public customTimingPropertyNames: string[] = [];
   public customLinks: string[] = [];
+
+  private showMoreColumns = false;
+  private showTrivialTimings = false;
 
   private subscriptions = new Subscription();
 
@@ -136,5 +145,15 @@ export class NgxMiniProfilerTimingsComponent implements OnInit, OnDestroy {
       },
     });
     this.timingsDialogOpen.emit(dialogRef);
+  }
+
+  public onClickToggleMoreColumns(): void {
+    this.showMoreColumns = !this.showMoreColumns;
+    this.toggleMoreColumns.emit(this.showMoreColumns);
+  }
+
+  public onClickToggleTrivialTimings(): void {
+    this.showTrivialTimings = !this.showTrivialTimings;
+    this.toggleTrivialTimings.emit(this.showTrivialTimings);
   }
 }

@@ -31,9 +31,6 @@ import { NgxMiniProfilerService } from '../../services/ngx-miniprofiler.service'
   encapsulation: ViewEncapsulation.None,
 })
 export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy, AfterViewInit {
-  // @HostBinding('class')
-  // rootClass: string;
-
   @Input()
   result: IProfiler;
 
@@ -50,6 +47,8 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy, AfterV
   popupRef: ElementRef;
 
   public showPopup = false;
+  public showMoreColumns = false;
+  public showTrivialTimings = false;
   public timingsDialogRef: DialogRef;
 
   private subscriptions = new Subscription();
@@ -165,5 +164,13 @@ export class NgxMiniProfilerResultComponent implements OnInit, OnDestroy, AfterV
 
   public onTimingsDialogOpen(dialogRef: DialogRef): void {
     this.timingsDialogRef = dialogRef;
+  }
+
+  public onToggleMoreColumns(showMoreColumns: boolean): void {
+    this.showMoreColumns = showMoreColumns;
+  }
+
+  public onToggleTrivialTimings(showTrivialTimings: boolean): void {
+    this.showTrivialTimings = showTrivialTimings;
   }
 }

@@ -1,4 +1,5 @@
-<div class="mp-result" [class.active]="showPopup">
+<div class="mp-result" [class.active]="showPopup" [class.show-columns]="showMoreColumns"
+  [class.show-trivial]="showTrivialTimings">
   <div #buttonRef class="mp-button {{warningClassName}}" [title]="encode(result.Name)" (click)="toggleShowPopup()">
     <span class="mp-number">{{ duration(result.DurationMilliseconds)}} <span class="mp-unit">ms</span></span>
     <span class="mp-warning" *ngIf="result.HasDuplicateCustomTimings || result.HasWarning">!</span>
@@ -16,7 +17,8 @@
       </div>
     </div>
     <div class="mp-output">
-      <ngx-miniprofiler-timings [result]="result" (timingsDialogOpen)="onTimingsDialogOpen($event)"></ngx-miniprofiler-timings>
+      <ngx-miniprofiler-timings [result]="result" (toggleTrivialTimings)="onToggleTrivialTimings($event)"
+        (toggleMoreColumns)="onToggleMoreColumns($event)"></ngx-miniprofiler-timings>
     </div>
   </div>
 </div>

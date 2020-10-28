@@ -10,11 +10,11 @@ import {
 } from '@angular/core';
 import { DialogRef } from '@ngneat/dialog';
 import { registerLanguage, highlight } from 'highlight.js';
-import sql from 'highlight.js/lib/languages/sql';
 import { IGapInfo } from '../../models/gaps';
 import { IProfiler } from '../../models/profiler';
 import { ITiming } from '../../models/timing';
 import { NgxMiniProfilerDefaultOptions, NGX_MINIPROFILER_DEFAULT_OPTIONS } from '../../ngx-miniprofiler-options';
+import { sql } from '../../util/highlight_sql';
 
 @Component({
   selector: 'ngx-miniprofiler-query-dialog',

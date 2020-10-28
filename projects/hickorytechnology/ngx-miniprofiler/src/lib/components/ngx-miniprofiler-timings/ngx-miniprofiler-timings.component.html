@@ -126,8 +126,9 @@
   <a href="{{options.path}}results?id={{result.Id}}" class="mp-share-mp-results" target="_blank">share</a>
   <a *ngFor="let k of customLinks" href="{{result.CustomLinks[k]}}" class="mp-custom-link" target="_blank">{{k}}</a>
   <span>
-    <a class="mp-toggle-columns" title="shows additional columns">more columns</a>
-    <a class="mp-toggle-columns mp-more-columns" title="hides additional columns">fewer columns</a>
+    <a class="mp-toggle-columns" title="shows additional columns" (click)="onClickToggleMoreColumns()">more columns</a>
+    <a class="mp-toggle-columns mp-more-columns" title="hides additional columns"
+      (click)="onClickToggleTrivialTimings()">fewer columns</a>
     <ng-container *ngIf="result.HasTrivialTimings">
       <a class="mp-toggle-trivial" title="shows any rows with &lt; {{options.trivialMilliseconds}} ms duration">show
         trivial</a>

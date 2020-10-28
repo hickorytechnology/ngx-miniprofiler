@@ -128,12 +128,14 @@
   <span>
     <a class="mp-toggle-columns" title="shows additional columns" (click)="onClickToggleMoreColumns()">more columns</a>
     <a class="mp-toggle-columns mp-more-columns" title="hides additional columns"
-      (click)="onClickToggleTrivialTimings()">fewer columns</a>
+      (click)="onClickToggleMoreColumns()">fewer columns</a>
     <ng-container *ngIf="result.HasTrivialTimings">
-      <a class="mp-toggle-trivial" title="shows any rows with &lt; {{options.trivialMilliseconds}} ms duration">show
+      <a class="mp-toggle-trivial" title="shows any rows with &lt; {{options.trivialMilliseconds}} ms duration"
+        (click)="onClickToggleTrivialTimings()">show
         trivial</a>
       <a class="mp-toggle-trivial mp-trivial"
-        title="hides any rows with &lt; {{options.trivialMilliseconds}} ms duration">hide trivial</a>
+        title="hides any rows with &lt; {{options.trivialMilliseconds}} ms duration"
+        (click)="onClickToggleTrivialTimings()">hide trivial</a>
     </ng-container>
   </span>
 </div>

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.56](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.55...v0.0.56) (2020-10-28)
+
+
+### Bug Fixes
+
+* 🐛 added click handlers to popup buttons ([c3ff977](https://github.com/hickorytechnology/ngx-miniprofiler/commit/c3ff977ef7117bb3bc1ddfa1873941f33d905631))
+
 ### [0.0.55](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.54...v0.0.55) (2020-10-28)
 
 

@@ -48,7 +48,7 @@ export class NgxMiniProfilerComponent implements OnInit, OnDestroy {
                   .sort((x, y) => new Date(x.Started).getTime() - new Date(y.Started).getTime());
 
                 if (this.options.maxTracesToShow > 0) {
-                  formatted.slice(Math.max(formatted.length - this.options.maxTracesToShow, 0));
+                  formatted = formatted.slice(Math.max(formatted.length - this.options.maxTracesToShow, 0));
                 }
 
                 this.profileResults = formatted;

@@ -62,7 +62,7 @@ export class NgxMiniProfilerQueryDialogComponent implements OnInit, OnDestroy {
   }
 
   public highlight(encoded: string): string {
-    return highlight('sql', encoded).value;
+    return hljs.highlight('sql', encoded).value;
   }
 
   /**

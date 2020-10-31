@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { EventEmitter, Inject, Injectable, Optional } from '@angular/core';
+import { NavigationStart, Router } from '@angular/router';
 import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IGapInfo, IGapReason, IGapTiming } from '../models/gaps';
@@ -13,15 +14,20 @@ import { NgxMiniProfilerDefaultOptions, NGX_MINIPROFILER_DEFAULT_OPTIONS } from 
 export class NgxMiniProfilerService {
   constructor(
     private http: HttpClient,
+    private router: Router,
     @Optional()
     @Inject(NGX_MINIPROFILER_DEFAULT_OPTIONS)
     private options: NgxMiniProfilerDefaultOptions
-  ) {}
+  ) {
+    this.setupRouterEventsListener();
+  }
 
   public container: HTMLDivElement;
   public controls: HTMLDivElement;
   public fetchStatus: { [id: string]: string } = {}; // so we never pull down a profiler twice
   public idUpdated = new EventEmitter<string[]>();
+
+  public flushEvents$ = new BehaviorSubject<boolean>(false);
 
   private selectedDataSource = new BehaviorSubject<string>(null);
   selectedProfilerResult = this.selectedDataSource.asObservable();
@@ -376,5 +382,19 @@ export class NgxMiniProfilerService {
     }
 
     return overlap;
+  }
+
+  /**
+   * Subscribe to Angular's router events to determine if the
+   * current profiler results should be flushed.
+   */
+  private setupRouterEventsListener(): void {
+    if (this.options.flushResultsOnRouteNavigate) {
+      this.router.events.subscribe((event) => {
+        if (event instanceof NavigationStart) {
+          this.flushEvents$.next(true);
+        }
+      });
+    }
   }
 }

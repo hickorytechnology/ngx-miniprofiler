@@ -63,6 +63,12 @@ export interface NgxMiniProfilerDefaultOptions {
    * Any Timing step with a duration less than or equal to this will be hidden by default in the UI; defaults to 2.0 ms.
    */
   trivialMilliseconds: number;
+
+  /**
+   * Whether or not profiler results should be flushed when the user navigates
+   * to a new route within their application.
+   */
+  flushResultsOnRouteNavigate: boolean;
 }
 
 /**
@@ -94,5 +100,6 @@ export function NGX_MINIPROFILER_DEFAULT_OPTIONS_FACTORY(): NgxMiniProfilerDefau
     startHidden: false,
     toggleShortcut: 'Alt+P',
     trivialMilliseconds: 2,
+    flushResultsOnRouteNavigate: false,
   };
 }

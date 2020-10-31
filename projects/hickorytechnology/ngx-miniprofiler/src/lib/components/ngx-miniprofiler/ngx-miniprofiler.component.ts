@@ -55,6 +55,15 @@ export class NgxMiniProfilerComponent implements OnInit, OnDestroy {
         )
         .subscribe()
     );
+
+    if (this.options.flushResultsOnRouteNavigate) {
+      this.subscriptions.add(
+        this.profilerService.flushEvents$.subscribe(() => {
+          this.profileResults = [];
+          this.cdr.markForCheck();
+        })
+      );
+    }
   }
 
   public ngOnDestroy(): void {

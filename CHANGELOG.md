@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.64](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.63...v0.0.64) (2020-10-31)
+
+
+### Bug Fixes
+
+* 🐛 maxTracesToShow implementation assignment ([c5905c1](https://github.com/hickorytechnology/ngx-miniprofiler/commit/c5905c19cff5c0e66b244267042af0ed3a2de6f7))
+
 ### [0.0.63](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.62...v0.0.63) (2020-10-31)
 
 

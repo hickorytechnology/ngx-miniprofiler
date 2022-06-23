@@ -18,7 +18,7 @@
     "release": "cd projects/hickorytechnology/ngx-miniprofiler && standard-version --infile ../../../CHANGELOG.md",
     "test:lib:headless": "cross-env CI=true npm run test:lib"
   },
-  "private": true,
+  "private": false,
   "dependencies": {
     "@angular/animations": "~10.1.1",
     "@angular/common": "~10.1.1",
@@ -82,8 +82,7 @@
   "husky": {
     "hooks": {
       "commit-msg": "commitlint $HUSKY_GIT_PARAMS",
-      "pre-commit": "npm run hooks:pre-commit && lint-staged",
-      "pre-push": "npm run test:lib:headless"
+      "pre-commit": "npm run hooks:pre-commit && lint-staged"
     }
   }
 }

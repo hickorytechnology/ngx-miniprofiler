@@ -1,11 +1,11 @@
 import { createServiceFactory, SpectatorService } from '@ngneat/spectator';
-import { NgxMiniprofilerService } from './ngx-miniprofiler.service';
+import { NgxMiniProfilerService } from './ngx-miniprofiler.service';
 
-describe('NgxMiniprofilerService', () => {
-  let spectator: SpectatorService<NgxMiniprofilerService>;
-  const createService = createServiceFactory(NgxMiniprofilerService);
+describe('NgxMiniProfilerService', () => {
+  let spectator: SpectatorService<NgxMiniProfilerService>;
+  const createService = createServiceFactory(NgxMiniProfilerService);
 
-  beforeEach(() => spectator = createService());
+  beforeEach(() => (spectator = createService()));
 
   it('should...', () => {
     expect(spectator.service).toBeTruthy();

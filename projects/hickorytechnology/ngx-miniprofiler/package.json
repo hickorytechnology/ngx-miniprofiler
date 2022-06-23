@@ -1,6 +1,6 @@
 {
   "name": "@hickorytechnology/ngx-miniprofiler",
-  "version": "0.0.72",
+  "version": "0.0.73",
   "peerDependencies": {
     "@angular/common": ">=10.1.0 <15.0.0",
     "@angular/core": ">=10.1.0 <15.0.0",

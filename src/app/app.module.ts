@@ -5,17 +5,17 @@ import { AppComponent } from './app.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import {
   NgxMiniProfilerInterceptor,
-  NgxMiniprofilerModule,
-  NgxMiniProfilerOptions,
+  NgxMiniProfilerModule,
+  NGX_MINIPROFILER_DEFAULT_OPTIONS,
 } from '@hickorytechnology/ngx-miniprofiler';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, HttpClientModule, NgxMiniprofilerModule],
+  imports: [BrowserModule, HttpClientModule, NgxMiniProfilerModule],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: NgxMiniProfilerInterceptor, multi: true },
     {
-      provide: NgxMiniProfilerOptions,
+      provide: NGX_MINIPROFILER_DEFAULT_OPTIONS,
       useValue: {
         api: '/api/profiler/',
       },

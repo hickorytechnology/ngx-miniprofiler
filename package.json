@@ -16,7 +16,8 @@
     "build:lib:prod": "ng build @hickorytechnology/ngx-miniprofiler --prod",
     "test:lib": "ng test @hickorytechnology/ngx-miniprofiler",
     "release": "cd projects/hickorytechnology/ngx-miniprofiler && standard-version --infile ../../../CHANGELOG.md",
-    "test:lib:headless": "cross-env CI=true npm run test:lib"
+    "test:lib:headless": "cross-env CI=true npm run test:lib",
+    "publish:lib": "cd projects/hickorytechnology/ngx-miniprofiler && npm publish"
   },
   "private": false,
   "dependencies": {

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.72](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.71...v0.0.72) (2022-06-23)
+
+
+### Build System
+
+* expanded peer dep version limits ([528bcc4](https://github.com/hickorytechnology/ngx-miniprofiler/commit/528bcc4fa65768a476851f5638c3768c73e9797a))
+
 ### [0.0.71](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.70...v0.0.71) (2022-06-23)
 
 ### [0.0.70](https://github.com/hickorytechnology/ngx-miniprofiler/compare/v0.0.69...v0.0.70) (2022-06-23)

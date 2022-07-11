@@ -1,0 +1,45 @@
+{
+  "projectType": "library",
+  "sourceRoot": "libs/ngx-miniprofiler/src",
+  "prefix": "ht",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:package",
+      "outputs": [
+        "dist/libs/ngx-miniprofiler"
+      ],
+      "options": {
+        "project": "libs/ngx-miniprofiler/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/ngx-miniprofiler/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/ngx-miniprofiler/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": [
+        "coverage/libs/ngx-miniprofiler"
+      ],
+      "options": {
+        "jestConfig": "libs/ngx-miniprofiler/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/ngx-miniprofiler/**/*.ts",
+          "libs/ngx-miniprofiler/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

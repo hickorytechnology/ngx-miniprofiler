@@ -1,0 +1,12 @@
+<ng-container *ngIf="profileResults.length > 0">
+  <div
+    class="mp-results mp-{{ options.renderPosition }} mp-scheme-{{
+      options.colorScheme
+    }} {{ controlsClassName }}"
+  >
+    <ht-miniprofiler-result
+      *ngFor="let result of profileResults"
+      [result]="result"
+    ></ht-miniprofiler-result>
+  </div>
+</ng-container>

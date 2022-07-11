@@ -1,0 +1,13 @@
+{
+  "name": "@hickorytechnology/ngx-miniprofiler",
+  "version": "1.0.0",
+  "peerDependencies": {
+    "@angular/common": "11 - 14",
+    "@angular/core": "11 - 14",
+    "@angular/router": "11 - 14",
+    "rxjs": ">=6.5.5"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  }
+}

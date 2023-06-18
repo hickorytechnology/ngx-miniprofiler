@@ -1,8 +1,20 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, Optional, ViewEncapsulation } from '@angular/core';
-import { DialogRef } from '@ngneat/dialog';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import hljs from 'highlight.js/lib/core';
-import { MiniProfilerDefaultOptions, NGX_MINIPROFILER_DEFAULT_OPTIONS } from '../../default-options';
+import { POLYMORPHEUS_CONTEXT } from '../../cdk/polymorpheus';
+import { MiniProfilerDefaultOptions } from '../../default-options';
+import {
+  MiniProfilerDialogContext,
+  MiniProfilerDialogData,
+} from '../../interfaces/mp-dialog';
 import { IGapInfo, IProfiler, ITiming } from '../../models';
+import { GLOBAL_MINIPROFILER_CONFIG } from '../../providers';
 import { sql } from '../../util/highlight_sql';
 
 @Component({
@@ -13,22 +25,28 @@ import { sql } from '../../util/highlight_sql';
   encapsulation: ViewEncapsulation.None,
 })
 export class MiniProfilerQueryDialogComponent implements OnInit {
-  public profilerResult!: IProfiler;
-  public timing!: ITiming;
+  public profilerResult: IProfiler | undefined;
+  public timing: ITiming | undefined;
+
+  public showTrivialGaps = false;
 
   constructor(
-    private dialogRef: DialogRef,
-    private cdr: ChangeDetectorRef,
-    @Optional()
-    @Inject(NGX_MINIPROFILER_DEFAULT_OPTIONS)
-    private profilerOptions: MiniProfilerDefaultOptions
+    @Inject(POLYMORPHEUS_CONTEXT)
+    private readonly context: MiniProfilerDialogContext<
+      MiniProfilerDialogData,
+      MiniProfilerDialogData
+    >,
+    @Inject(GLOBAL_MINIPROFILER_CONFIG)
+    public profilerOptions: MiniProfilerDefaultOptions
   ) {
     hljs.registerLanguage('sql', sql);
   }
 
   public ngOnInit(): void {
-    this.profilerResult = this.dialogRef.data.profilerResult;
-    this.timing = this.dialogRef.data.timing;
+    // this.profilerResult = this.dialogRef.data.profilerResult;
+    // this.timing = this.dialogRef.data.timing;
+    this.profilerResult = this.context.data?.profilerResult;
+    this.timing = this.context.data?.timing;
   }
 
   public get options(): MiniProfilerDefaultOptions {
@@ -57,11 +75,16 @@ export class MiniProfilerQueryDialogComponent implements OnInit {
    * @param milliseconds
    * @param decimalPlaces
    */
-  public duration(milliseconds: number | undefined, decimalPlaces?: number): string {
+  public duration(
+    milliseconds: number | undefined,
+    decimalPlaces?: number
+  ): string {
     if (milliseconds === undefined) {
       return '';
     }
-    return (milliseconds || 0).toFixed(decimalPlaces === undefined ? 1 : decimalPlaces);
+    return (milliseconds || 0).toFixed(
+      decimalPlaces === undefined ? 1 : decimalPlaces
+    );
   }
 
   public gapClassName(gap: IGapInfo): string {
@@ -72,5 +95,9 @@ export class MiniProfilerQueryDialogComponent implements OnInit {
     }
 
     return classNameBuilder.join(' ');
+  }
+
+  public toggleTrivialGaps() {
+    this.showTrivialGaps = !this.showTrivialGaps;
   }
 }

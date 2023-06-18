@@ -1,7 +1,7 @@
 <ng-container *ngIf="profileResults.length > 0">
   <div
-    class="mp-results mp-{{ options.renderPosition }} mp-scheme-{{
-      options.colorScheme
+    class="mp-results mp-{{ options.renderPosition.toLowerCase() }} mp-scheme-{{
+      options.colorScheme.toLowerCase()
     }} {{ controlsClassName }}"
   >
     <ht-miniprofiler-result
@@ -9,4 +9,6 @@
       [result]="result"
     ></ht-miniprofiler-result>
   </div>
+
+  <ht-dialog-host></ht-dialog-host>
 </ng-container>

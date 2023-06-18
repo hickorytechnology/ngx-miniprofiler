@@ -2,12 +2,15 @@
   "name": "@hickorytechnology/ngx-miniprofiler",
   "version": "1.0.0",
   "peerDependencies": {
-    "@angular/common": "11 - 14",
-    "@angular/core": "11 - 14",
-    "@angular/router": "11 - 14",
-    "rxjs": ">=6.5.5"
+    "@angular/common": "14 - 16",
+    "@angular/core": "14 - 16",
+    "@angular/platform-browser": "14 - 16",
+    "@angular/router": "14 - 16",
+    "highlight.js": "9 - 11",
+    "rxjs": "6 - 7"
   },
   "dependencies": {
     "tslib": "^2.3.0"
-  }
+  },
+  "sideEffects": false
 }

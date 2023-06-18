@@ -1,9 +1,24 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Inject, Input, OnDestroy, OnInit, Optional, Output, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
-import { DialogRef } from '@ngneat/dialog';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  Renderer2,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
-import { MiniProfilerDefaultOptions, NGX_MINIPROFILER_DEFAULT_OPTIONS } from '../../default-options';
-import { MiniProfilerService } from '../../services/miniprofiler.service';
+import { MiniProfilerDefaultOptions } from '../../default-options';
 import { IProfiler, RenderPosition } from '../../models';
+import { GLOBAL_MINIPROFILER_CONFIG } from '../../providers';
+import { MiniProfilerService } from '../../services/miniprofiler.service';
 
 @Component({
   selector: 'ht-miniprofiler-result',
@@ -12,37 +27,38 @@ import { IProfiler, RenderPosition } from '../../models';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MiniProfilerResultComponent implements OnInit, OnDestroy, AfterViewInit {
+export class MiniProfilerResultComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
   @Input()
-  result!: IProfiler;
+  public result!: IProfiler;
 
   @Input()
-  isNew = true;
+  public isNew = true;
 
   @Output()
-  buttonClick = new EventEmitter();
+  public buttonClick = new EventEmitter();
 
   @ViewChild('buttonRef')
-  buttonRef!: ElementRef;
+  public buttonRef!: ElementRef;
 
   @ViewChild('popupRef')
-  popupRef!: ElementRef;
+  public popupRef!: ElementRef;
 
   public showPopup = false;
   public showMoreColumns = false;
   public showTrivialTimings = false;
-  public timingsDialogRef!: DialogRef;
+  public highlightActive = true;
 
   private readonly subscriptions = new Subscription();
 
   constructor(
-    private profilerService: MiniProfilerService,
     private cdr: ChangeDetectorRef,
-    private renderer: Renderer2,
-    @Optional()
-    @Inject(NGX_MINIPROFILER_DEFAULT_OPTIONS)
-    private profilerOptions: MiniProfilerDefaultOptions
-  ) { }
+    @Inject(GLOBAL_MINIPROFILER_CONFIG)
+    private profilerOptions: MiniProfilerDefaultOptions,
+    private profilerService: MiniProfilerService,
+    private renderer: Renderer2
+  ) {}
 
   public ngOnInit(): void {
     this.subscriptions.add(
@@ -52,46 +68,64 @@ export class MiniProfilerResultComponent implements OnInit, OnDestroy, AfterView
         }
       })
     );
+
+    /**
+     * The highlight animation is two seconds long, so wait that amount of time (plus a bit of padding)
+     * before marking the highlight animation as inactive.
+     *
+     * This prevents an issue where the highlight will return after clicking a result button (background
+     * color changes from blue back to white).
+     */
+    setTimeout(() => {
+      this.highlightActive = false;
+    }, 2100);
   }
 
-  ngAfterViewInit(): void {
+  public ngAfterViewInit(): void {
     const button = this.buttonRef.nativeElement;
     const popup = this.popupRef.nativeElement;
-    const pos = this.options.renderPosition;
+    const pos = this.profilerOptions.renderPosition;
 
     // move left or right, based on config
     this.renderer.setStyle(
       popup,
-      pos === RenderPosition.Left || pos === RenderPosition.BottomLeft ? 'left' : 'right',
+      pos === RenderPosition.Left || pos === RenderPosition.BottomLeft
+        ? 'left'
+        : 'right',
       `${button.offsetWidth - 1}px`
     );
 
-    if (pos === RenderPosition.BottomLeft || pos === RenderPosition.BottomRight) {
+    if (
+      pos === RenderPosition.BottomLeft ||
+      pos === RenderPosition.BottomRight
+    ) {
       // calculate get the mp-button's offsets
-      const bottom = window.innerHeight - button.getBoundingClientRect().top - button.offsetHeight + window.scrollY;
+      const bottom =
+        window.innerHeight -
+        button.getBoundingClientRect().top -
+        button.offsetHeight +
+        window.scrollY;
 
       this.renderer.setStyle(popup, 'bottom', 0);
-      this.renderer.setStyle(popup, 'max-height', `calc(100vh - ${bottom + 25}px)`);
+      this.renderer.setStyle(
+        popup,
+        'max-height',
+        `calc(100vh - ${bottom + 25}px)`
+      );
     } else {
       this.renderer.setStyle(popup, 'top', 0);
       this.renderer.setStyle(
         popup,
         'max-height',
-        `calc(100vh - ${button.getBoundingClientRect().top - window.window.scrollY + 25}px)`
+        `calc(100vh - ${
+          button.getBoundingClientRect().top - window.window.scrollY + 25
+        }px)`
       );
     }
   }
 
   public ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
-  }
-
-  public get options(): MiniProfilerDefaultOptions {
-    return this.profilerOptions;
-  }
-
-  public get warningClassName(): string {
-    return this.result.HasWarning ? 'mp-button-warning' : '';
   }
 
   public toggleShowPopup(): void {
@@ -102,9 +136,9 @@ export class MiniProfilerResultComponent implements OnInit, OnDestroy, AfterView
     } else {
       this.profilerService.selectProfileResult(null);
 
-      if (this.timingsDialogRef != null) {
-        this.timingsDialogRef.close();
-      }
+      // if (this.timingsDialogRef != null) {
+      //   this.timingsDialogRef.close();
+      // }
     }
 
     this.cdr.markForCheck();
@@ -112,9 +146,9 @@ export class MiniProfilerResultComponent implements OnInit, OnDestroy, AfterView
 
   public setShowPopup(showPopup: boolean): void {
     this.showPopup = showPopup;
-    if (!showPopup && this.timingsDialogRef != null) {
-      this.timingsDialogRef.close();
-    }
+    // if (!showPopup && this.timingsDialogRef != null) {
+    //   this.timingsDialogRef.close();
+    // }
 
     this.cdr.markForCheck();
   }
@@ -137,16 +171,21 @@ export class MiniProfilerResultComponent implements OnInit, OnDestroy, AfterView
    * @param milliseconds
    * @param decimalPlaces
    */
-  public duration(milliseconds: number | undefined, decimalPlaces?: number): string {
+  public duration(
+    milliseconds: number | undefined,
+    decimalPlaces?: number
+  ): string {
     if (milliseconds === undefined) {
       return '';
     }
-    return (milliseconds || 0).toFixed(decimalPlaces === undefined ? 1 : decimalPlaces);
+    return (milliseconds || 0).toFixed(
+      decimalPlaces === undefined ? 1 : decimalPlaces
+    );
   }
 
-  public onTimingsDialogOpen(dialogRef: DialogRef): void {
-    this.timingsDialogRef = dialogRef;
-  }
+  // public onTimingsDialogOpen(dialogRef: DialogRef): void {
+  //   this.timingsDialogRef = dialogRef;
+  // }
 
   public onToggleMoreColumns(showMoreColumns: boolean): void {
     this.showMoreColumns = showMoreColumns;

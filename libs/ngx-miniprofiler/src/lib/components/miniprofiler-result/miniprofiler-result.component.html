@@ -1,12 +1,18 @@
 <div
-  class="mp-result"
-  [class.active]="showPopup"
-  [class.show-columns]="showMoreColumns"
-  [class.show-trivial]="showTrivialTimings"
+  [ngClass]="{
+    'mp-result': true,
+    active: showPopup,
+    'show-columns': showMoreColumns,
+    'show-trivial': showTrivialTimings
+  }"
 >
   <div
     #buttonRef
-    class="mp-button {{ warningClassName }}"
+    [ngClass]="{
+      'mp-button': true,
+      'mp-button-warning': result.HasWarning,
+      new: highlightActive
+    }"
     [title]="encode(result.Name)"
     (click)="toggleShowPopup()"
   >

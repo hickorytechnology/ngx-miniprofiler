@@ -1,98 +1,258 @@
-<div class="mp-queries" *ngIf="profilerResult.HasCustomTimings">
-  <table>
-    <thead>
-      <tr>
-        <th>
-          <div class="mp-call-type">Call Type</div>
-          <div>Step</div>
-          <div>Duration <span class="mp-unit">(from start)</span></div>
-        </th>
-        <th>
-          <div class="mp-stack-trace">Call Stack</div>
-          <div>Command</div>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
+<div
+  [ngClass]="{ 'mp-queries': true, 'show-trivial': showTrivialGaps }"
+  class="mp-queries"
+  *ngIf="profilerResult?.HasCustomTimings"
+>
+  <ng-container
+    *ngIf="
+      profilerOptions.queryDialogUI === 'default';
+      then defaultUITemplate;
+      else alternativeUITemplate
+    "
+  ></ng-container>
+
+  <ng-template #defaultUITemplate>
+    <p class="mp-trivial-gap-container">
+      <button
+        type="button"
+        class="mp-toggle-trivial-gaps"
+        (click)="toggleTrivialGaps()"
+      >
+        toggle trivial gaps
+      </button>
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>
+            <div class="mp-call-type">Call Type</div>
+            <div>Step</div>
+            <div>Duration <span class="mp-unit">(from start)</span></div>
+          </th>
+          <th>
+            <div class="mp-stack-trace">Call Stack</div>
+            <div>Command</div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container
+          *ngFor="let ct of profilerResult?.AllCustomTimings; let i = index"
+        >
+          <!-- Previous gap -->
+          <tr
+            *ngIf="ct.PrevGap && ct.PrevGap.Reason.duration > 0.02"
+            class="{{ gapClassName(ct.PrevGap) }}"
+          >
+            <td class="mp-info">
+              {{ ct.PrevGap.duration }} <span class="mp-unit">ms</span>
+            </td>
+            <td class="query">
+              <div>
+                {{ encode(ct.PrevGap.Reason.name) }} &mdash;
+                {{ ct.PrevGap.Reason.duration.toFixed(2) }}
+                <span class="mp-unit">ms</span>
+              </div>
+            </td>
+          </tr>
+
+          <!-- custom timings -->
+          <tr
+            [class.mp-odd]="i % 2"
+            [attr.data-timing-id]="ct.Parent?.Id ?? ''"
+          >
+            <td>
+              <div class="mp-call-type" [class.mp-warning]="ct.Errored">
+                {{ encode(ct.CallType ?? '') }}
+                {{
+                  encode(
+                    !ct.ExecuteType || ct.CallType === ct.ExecuteType
+                      ? ''
+                      : ' - ' + ct.ExecuteType
+                  )
+                }}
+                <span
+                  class="mp-warning"
+                  title="Duplicate"
+                  *ngIf="ct.IsDuplicate || ct.Errored"
+                  >!</span
+                >
+              </div>
+              <div>{{ encode(ct.Parent ? ct.Parent.Name : '') }}</div>
+              <div class="mp-number">
+                {{ duration(ct.DurationMilliseconds) }}
+                <span class="mp-unit"
+                  >ms (T+{{ duration(ct.StartMilliseconds) }} ms)</span
+                >
+              </div>
+              <div *ngIf="ct.FirstFetchDurationMilliseconds">
+                First Result: {{ duration(ct.FirstFetchDurationMilliseconds) }}
+                <span class="mp-unit">ms</span>
+              </div>
+            </td>
+            <td>
+              <div class="query">
+                <div class="mp-stack-trace">{{ ct.StackTraceSnippet }}</div>
+                <pre><code [innerHTML]="highlight(ct.CommandString)"></code></pre>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Next gap -->
+          <tr
+            *ngIf="ct.NextGap && ct.NextGap.Reason.duration > 0.02"
+            class="{{ gapClassName(ct.NextGap) }}"
+          >
+            <td class="mp-info">
+              {{ ct.NextGap.duration }} <span class="mp-unit">ms</span>
+            </td>
+            <td class="query">
+              <div>
+                {{ encode(ct.NextGap.Reason.name) }} &mdash;
+                {{ ct.NextGap.Reason.duration.toFixed(2) }}
+                <span class="mp-unit">ms</span>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </ng-template>
+
+  <ng-template #alternativeUITemplate>
+    <div class="mp-alt-ui-header">
+      <div class="mp-checkbox-field-container">
+        <div class="mp-checkbox-container">
+          <input
+            type="checkbox"
+            [checked]="showTrivialGaps"
+            (change)="toggleTrivialGaps()"
+            id="toggle-gaps"
+            name="toggle-gaps"
+            class="mp-checkbox"
+          />
+        </div>
+        <div class="mp-checkbox-label-container">
+          <label for="toggle-gaps">Display trivial gaps</label>
+          <p>
+            Includes timing gaps that would otherwise be hidden from results
+          </p>
+        </div>
+      </div>
+    </div>
+    <ul role="list" class="mp-timing-spacer-y">
       <ng-container
-        *ngFor="let ct of profilerResult.AllCustomTimings; let i = index"
+        *ngFor="let ct of profilerResult?.AllCustomTimings; let last = last"
       >
         <!-- Previous gap -->
-        <tr
+        <li
           *ngIf="ct.PrevGap && ct.PrevGap.Reason.duration > 0.02"
-          class="{{ gapClassName(ct.PrevGap) }}"
+          class="mp-timing-list-item mp-timing-gap"
         >
-          <td class="mp-info">
-            {{ ct.PrevGap.duration }} <span class="mp-unit">ms</span>
-          </td>
-          <td class="query">
-            <div>
-              {{ encode(ct.PrevGap.Reason.name) }} &mdash;
-              {{ ct.PrevGap.Reason.duration.toFixed(2) }}
-              <span class="mp-unit">ms</span>
-            </div>
-          </td>
-        </tr>
+          <div
+            class="mp-timing-delimiter-vertical-spacer-container"
+            *ngIf="!last"
+          >
+            <div class="mp-timing-delimiter-vertical-spacer"></div>
+          </div>
+          <div class="mp-timing-delimiter-bullet-container">
+            <div class="mp-timing-delimiter-bullet"></div>
+          </div>
+          <p class="mp-timing-content-gap-container">
+            <span class="mp-gap-badge">Gap</span>
+            {{ encode(ct.PrevGap.Reason.name) }}
+          </p>
+          <span class="mp-timing-duration">
+            {{ ct.PrevGap.Reason.duration.toFixed(2) }}
+            <span class="mp-unit">ms</span>
+          </span>
+        </li>
 
         <!-- custom timings -->
-        <tr [class.mp-odd]="i % 2" [attr.data-timing-id]="ct.Parent.Id">
-          <td>
-            <div class="mp-call-type" [class.mp-warning]="ct.Errored">
-              {{ encode(ct.CallType) }}
-              {{
-                encode(
-                  !ct.ExecuteType || ct.CallType === ct.ExecuteType
-                    ? ''
-                    : ' - ' + ct.ExecuteType
-                )
-              }}
-              <span
-                class="mp-warning"
-                title="Duplicate"
-                *ngIf="ct.IsDuplicate || ct.Errored"
-                >!</span
-              >
+        <li
+          class="mp-timing-list-item"
+          [attr.data-timing-id]="ct.Parent?.Id ?? ''"
+        >
+          <div
+            class="mp-timing-delimiter-vertical-spacer-container"
+            *ngIf="!last"
+          >
+            <div class="mp-timing-delimiter-vertical-spacer"></div>
+          </div>
+          <div class="mp-timing-delimiter-bullet-container">
+            <div class="mp-timing-delimiter-bullet"></div>
+          </div>
+          <div class="mp-timing-content-container">
+            <div class="mp-custom-timing-grid">
+              <div class="mp-custom-timing-query-info">
+                <div class="mp-call-type" [class.mp-warning]="ct.Errored">
+                  {{ encode(ct.CallType ?? '') }}
+                  {{
+                    encode(
+                      !ct.ExecuteType || ct.CallType === ct.ExecuteType
+                        ? ''
+                        : ' - ' + ct.ExecuteType
+                    )
+                  }}
+                  <span
+                    class="mp-warning"
+                    title="Duplicate"
+                    *ngIf="ct.IsDuplicate || ct.Errored"
+                    >!</span
+                  >
+                </div>
+                <div class="mp-step-name">
+                  {{ encode(ct.Parent ? ct.Parent.Name : '') }}
+                </div>
+                <div *ngIf="ct.FirstFetchDurationMilliseconds">
+                  First Result:
+                  {{ duration(ct.FirstFetchDurationMilliseconds) }}
+                  <span class="mp-unit">ms</span>
+                </div>
+              </div>
+              <div class="mp-custom-timing-query-content">
+                <div class="query">
+                  <div class="mp-custom-timing-title">
+                    <div class="mp-stack-trace">{{ ct.StackTraceSnippet }}</div>
+                    <span class="mp-timing-duration">
+                      {{ duration(ct.DurationMilliseconds) }}
+                      <span class="mp-unit"
+                        >ms (T+{{ duration(ct.StartMilliseconds) }} ms)</span
+                      >
+                    </span>
+                  </div>
+                  <pre><code [innerHTML]="highlight(ct.CommandString)"></code></pre>
+                </div>
+              </div>
             </div>
-            <div>{{ encode(ct.Parent.Name) }}</div>
-            <div class="mp-number">
-              {{ duration(ct.DurationMilliseconds) }}
-              <span class="mp-unit"
-                >ms (T+{{ duration(ct.StartMilliseconds) }} ms)</span
-              >
-            </div>
-            <div *ngIf="ct.FirstFetchDurationMilliseconds">
-              First Result: {{ duration(ct.FirstFetchDurationMilliseconds) }}
-              <span class="mp-unit">ms</span>
-            </div>
-          </td>
-          <td>
-            <div class="query">
-              <div class="mp-stack-trace">{{ ct.StackTraceSnippet }}</div>
-              <pre><code [innerHTML]="highlight(ct.CommandString)"></code></pre>
-            </div>
-          </td>
-        </tr>
+          </div>
+        </li>
 
         <!-- Next gap -->
-        <tr
+        <li
           *ngIf="ct.NextGap && ct.NextGap.Reason.duration > 0.02"
-          class="{{ gapClassName(ct.NextGap) }}"
+          class="mp-timing-list-item mp-timing-gap"
         >
-          <td class="mp-info">
-            {{ ct.NextGap.duration }} <span class="mp-unit">ms</span>
-          </td>
-          <td class="query">
-            <div>
-              {{ encode(ct.NextGap.Reason.name) }} &mdash;
-              {{ ct.NextGap.Reason.duration.toFixed(2) }}
-              <span class="mp-unit">ms</span>
-            </div>
-          </td>
-        </tr>
+          <div
+            class="mp-timing-delimiter-vertical-spacer-container"
+            *ngIf="!last"
+          >
+            <div class="mp-timing-delimiter-vertical-spacer"></div>
+          </div>
+          <div class="mp-timing-delimiter-bullet-container">
+            <div class="mp-timing-delimiter-bullet"></div>
+          </div>
+          <p class="mp-timing-content-gap-container">
+            <span class="mp-gap-badge">Gap</span>
+            {{ encode(ct.NextGap.Reason.name) }}
+          </p>
+          <span class="mp-timing-duration">
+            {{ ct.NextGap.Reason.duration.toFixed(2) }}
+            <span class="mp-unit">ms</span>
+          </span>
+        </li>
       </ng-container>
-    </tbody>
-  </table>
-  <p class="mp-trivial-gap-container">
-    <a class="mp-toggle-trivial-gaps" href="#">toggle trivial gaps</a>
-  </p>
+    </ul>
+  </ng-template>
 </div>

@@ -1,21 +1,28 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { EventEmitter, Inject, Injectable, Optional } from '@angular/core';
+import { EventEmitter, Inject, Injectable } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
-import { BehaviorSubject, forkJoin, map, Observable } from 'rxjs';
-import { MiniProfilerDefaultOptions, NGX_MINIPROFILER_DEFAULT_OPTIONS } from '../default-options';
-import { ICustomTiming, IGapInfo, IGapReason, IGapTiming, IProfiler, ITiming, ITimingInfo } from '../models';
+import { BehaviorSubject, Observable, forkJoin, map } from 'rxjs';
+import { MiniProfilerDefaultOptions } from '../default-options';
+import {
+  ICustomTiming,
+  IGapInfo,
+  IGapReason,
+  IGapTiming,
+  IProfiler,
+  ITiming,
+  ITimingInfo,
+} from '../models';
+import { GLOBAL_MINIPROFILER_CONFIG } from '../providers';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MiniProfilerService {
-
   constructor(
+    @Inject(GLOBAL_MINIPROFILER_CONFIG)
+    private options: MiniProfilerDefaultOptions,
     private http: HttpClient,
-    private router: Router,
-    @Optional()
-    @Inject(NGX_MINIPROFILER_DEFAULT_OPTIONS)
-    private options: MiniProfilerDefaultOptions
+    private router: Router
   ) {
     this.setupRouterEventsListener();
   }
@@ -38,14 +45,23 @@ export class MiniProfilerService {
     // { name: 'unloadEventEnd', description: 'Unload End' },
     // { name: 'redirectStart', description: 'Redirect Start' },
     // { name: 'redirectEnd', description: 'Redirect End' },
-    { name: 'fetchStart', description: 'Fetch Start', lineDescription: 'Fetch', point: true } as ITimingInfo,
+    {
+      name: 'fetchStart',
+      description: 'Fetch Start',
+      lineDescription: 'Fetch',
+      point: true,
+    } as ITimingInfo,
     {
       name: 'domainLookupStart',
       description: 'Domain Lookup Start',
       lineDescription: 'DNS Lookup',
       type: 'dns',
     } as ITimingInfo,
-    { name: 'domainLookupEnd', description: 'Domain Lookup End', type: 'dns' } as ITimingInfo,
+    {
+      name: 'domainLookupEnd',
+      description: 'Domain Lookup End',
+      type: 'dns',
+    } as ITimingInfo,
     {
       name: 'connectStart',
       description: 'Connect Start',
@@ -58,7 +74,11 @@ export class MiniProfilerService {
       lineDescription: 'SSL/TLS Connect',
       type: 'ssl',
     } as ITimingInfo,
-    { name: 'connectEnd', description: 'Connect End', type: 'connect' } as ITimingInfo,
+    {
+      name: 'connectEnd',
+      description: 'Connect End',
+      type: 'connect',
+    } as ITimingInfo,
     {
       name: 'requestStart',
       description: 'Request Start',
@@ -71,8 +91,17 @@ export class MiniProfilerService {
       lineDescription: 'Response',
       type: 'response',
     } as ITimingInfo,
-    { name: 'responseEnd', description: 'Response End', type: 'response' } as ITimingInfo,
-    { name: 'domLoading', description: 'DOM Loading', lineDescription: 'DOM Loading', type: 'dom' } as ITimingInfo,
+    {
+      name: 'responseEnd',
+      description: 'Response End',
+      type: 'response',
+    } as ITimingInfo,
+    {
+      name: 'domLoading',
+      description: 'DOM Loading',
+      lineDescription: 'DOM Loading',
+      type: 'dom',
+    } as ITimingInfo,
     {
       name: 'domInteractive',
       description: 'DOM Interactive',
@@ -104,7 +133,11 @@ export class MiniProfilerService {
       lineDescription: 'Load Event',
       type: 'load',
     } as ITimingInfo,
-    { name: 'loadEventEnd', description: 'Load Event End', type: 'load' } as ITimingInfo,
+    {
+      name: 'loadEventEnd',
+      description: 'Load Event End',
+      type: 'load',
+    } as ITimingInfo,
     {
       name: 'firstPaintTime',
       description: 'First Paint',
@@ -147,7 +180,10 @@ export class MiniProfilerService {
    * @param ids MiniProfiler IDs that are used to fetch results
    */
   public fetchResults(ids: string[]): Observable<IProfiler[]> {
-    const headers: HttpHeaders = new HttpHeaders({ Accept: 'application/json', skip: 'true' });
+    const headers: HttpHeaders = new HttpHeaders({
+      Accept: 'application/json',
+      skip: 'true',
+    });
     const requests: Observable<IProfiler>[] = [];
     for (const id of ids) {
       const apiCall = `${this.options.api}/results?id=${id}`;
@@ -170,7 +206,8 @@ export class MiniProfilerService {
   }
 
   private parseDate(value: Date): Date {
-    const isoDate = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)(?:Z|(\+|-)([\d|:]*))?$/;
+    const isoDate =
+      /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)(?:Z|(\+|-)([\d|:]*))?$/;
     if (typeof value === 'string' && isoDate.exec(value)) {
       return new Date(value);
     }
@@ -198,10 +235,21 @@ export class MiniProfilerService {
     return result;
   }
 
-  private processTiming(profiler: IProfiler, timing: ITiming, parent: ITiming | undefined, depth: number): IProfiler {
+  private processTiming(
+    profiler: IProfiler,
+    timing: ITiming,
+    parent: ITiming | undefined,
+    depth: number
+  ): IProfiler {
     timing.DurationWithoutChildrenMilliseconds = timing.DurationMilliseconds;
     timing.DurationOfChildrenMilliseconds = 0;
-    timing.Parent = parent;
+
+    // select specific parent properties to prevent circular references
+    if (parent) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { Parent, Children, ...parentWithOmittedFields } = parent;
+      timing.Parent = parentWithOmittedFields;
+    }
     timing.Depth = depth;
     timing.HasDuplicateCustomTimings = {};
     timing.HasWarnings = {};
@@ -212,8 +260,10 @@ export class MiniProfilerService {
       timing.DurationOfChildrenMilliseconds += child.DurationMilliseconds;
     }
 
-    // do this after sutracting child durations
-    if (timing.DurationWithoutChildrenMilliseconds < this.options.trivialMilliseconds) {
+    if (
+      timing.DurationWithoutChildrenMilliseconds <
+      this.options.trivialMilliseconds
+    ) {
       timing.IsTrivial = true;
       profiler.HasTrivialTimings = true;
     }
@@ -224,7 +274,8 @@ export class MiniProfilerService {
       profiler.HasCustomTimings = true;
 
       for (const customType of Object.keys(timing.CustomTimings)) {
-        const customTimings = timing.CustomTimings[customType] || ([] as ICustomTiming[]);
+        const customTimings =
+          timing.CustomTimings[customType] || ([] as ICustomTiming[]);
         const customStat = {
           Duration: 0,
           Count: 0,
@@ -233,16 +284,33 @@ export class MiniProfilerService {
 
         for (const customTiming of customTimings) {
           // add to the overall list for the queries view
-          profiler.AllCustomTimings.push(customTiming);
-          customTiming.Parent = timing;
-          customTiming.CallType = customType;
+          if (profiler.AllCustomTimings == null) {
+            profiler.AllCustomTimings = [customTiming];
+          } else {
+            profiler.AllCustomTimings.push(customTiming);
+          }
 
+          // omit certain Parent fields to prevent circular reference issues
+          if (timing.Parent) {
+            const {
+              Parent,
+              Children,
+              CustomTimings,
+              CustomTimingStats,
+              ...timingWithOmittedFields
+            } = timing;
+            customTiming.Parent = timingWithOmittedFields;
+          }
+
+          customTiming.CallType = customType;
           customStat.Duration += customTiming.DurationMilliseconds;
 
           // whether or not duplicate custom timing should be ignored
           const ignored =
             customTiming.ExecuteType &&
-            this.options.ignoredDuplicateExecuteTypes.indexOf(customTiming.ExecuteType) > -1;
+            this.options.ignoredDuplicateExecuteTypes.indexOf(
+              customTiming.ExecuteType
+            ) > -1;
           if (!ignored) {
             customStat.Count++;
           }
@@ -252,7 +320,10 @@ export class MiniProfilerService {
             profiler.HasWarning = true;
           }
 
-          if (customTiming.CommandString && duplicates[customTiming.CommandString]) {
+          if (
+            customTiming.CommandString &&
+            duplicates[customTiming.CommandString]
+          ) {
             customTiming.IsDuplicate = true;
             timing.HasDuplicateCustomTimings[customType] = true;
             profiler.HasDuplicateCustomTimings = true;
@@ -262,14 +333,18 @@ export class MiniProfilerService {
         }
 
         timing.CustomTimingStats[customType] = customStat;
-        if (!profiler.CustomTimingStats[customType]) {
-          profiler.CustomTimingStats[customType] = {
-            Duration: 0,
-            Count: 0,
-          };
+
+        if (profiler.CustomTimingStats) {
+          if (!profiler.CustomTimingStats[customType]) {
+            profiler.CustomTimingStats[customType] = {
+              Duration: 0,
+              Count: 0,
+            };
+          }
+          profiler.CustomTimingStats[customType].Duration +=
+            customStat.Duration;
+          profiler.CustomTimingStats[customType].Count += customStat.Count;
         }
-        profiler.CustomTimingStats[customType].Duration += customStat.Duration;
-        profiler.CustomTimingStats[customType].Count += customStat.Count;
       }
     } else {
       timing.CustomTimings = {};
@@ -279,6 +354,13 @@ export class MiniProfilerService {
   }
 
   private processCustomTimings(profiler: IProfiler): ICustomTiming[] {
+    if (
+      profiler.AllCustomTimings == null ||
+      profiler.AllCustomTimings.length === 0
+    ) {
+      return [];
+    }
+
     const result = profiler.AllCustomTimings;
     result.sort((a, b) => a.StartMilliseconds - b.StartMilliseconds);
 
@@ -294,7 +376,11 @@ export class MiniProfilerService {
         finish: elem.StartMilliseconds,
       } as IGapInfo;
 
-      elem.PrevGap.Reason = this.determineGap(elem.PrevGap, profiler.Root, null);
+      elem.PrevGap.Reason = this.determineGap(
+        elem.PrevGap,
+        profiler.Root,
+        null
+      );
 
       time = elem.StartMilliseconds + elem.DurationMilliseconds;
     });
@@ -319,8 +405,11 @@ export class MiniProfilerService {
     } as IGapTiming;
 
     elem.richTiming = [duration];
-    if (elem.Parent != null) {
-      elem.Parent.richTiming = this.removeDuration(elem.Parent.richTiming, duration);
+    if (elem.Parent != null && elem.Parent.richTiming != null) {
+      elem.Parent.richTiming = this.removeDuration(
+        elem.Parent.richTiming,
+        duration
+      );
     }
 
     for (const child of elem.Children || []) {
@@ -328,7 +417,10 @@ export class MiniProfilerService {
     }
   }
 
-  private removeDuration(list: IGapTiming[], duration: IGapTiming): IGapTiming[] {
+  private removeDuration(
+    list: IGapTiming[],
+    duration: IGapTiming
+  ): IGapTiming[] {
     const newList: IGapTiming[] = [];
     for (const item of list) {
       if (duration.start > item.start) {
@@ -336,7 +428,10 @@ export class MiniProfilerService {
           newList.push(item);
           continue;
         }
-        newList.push({ start: item.start, finish: duration.start } as IGapTiming);
+        newList.push({
+          start: item.start,
+          finish: duration.start,
+        } as IGapTiming);
       }
 
       if (duration.finish < item.finish) {
@@ -344,14 +439,21 @@ export class MiniProfilerService {
           newList.push(item);
           continue;
         }
-        newList.push({ start: duration.finish, finish: item.finish } as IGapTiming);
+        newList.push({
+          start: duration.finish,
+          finish: item.finish,
+        } as IGapTiming);
       }
     }
 
     return newList;
   }
 
-  private determineGap(gap: IGapInfo, node: ITiming, match: IGapReason | null): IGapReason {
+  private determineGap(
+    gap: IGapInfo,
+    node: ITiming,
+    match: IGapReason | null
+  ): IGapReason {
     const overlap = this.determineOverlap(gap, node);
     if (match == null || overlap > match.duration) {
       match = { name: node.Name, duration: overlap };
@@ -368,15 +470,20 @@ export class MiniProfilerService {
 
   private determineOverlap(gap: IGapInfo, node: ITiming): number {
     let overlap = 0;
-    for (const current of node.richTiming) {
-      if (current.start > gap.finish) {
-        break;
-      }
-      if (current.finish < gap.start) {
-        continue;
-      }
 
-      overlap += Math.min(gap.finish, current.finish) - Math.max(gap.start, current.start);
+    if (node.richTiming && node.richTiming.length > 0) {
+      for (const current of node.richTiming) {
+        if (current.start > gap.finish) {
+          break;
+        }
+        if (current.finish < gap.start) {
+          continue;
+        }
+
+        overlap +=
+          Math.min(gap.finish, current.finish) -
+          Math.max(gap.start, current.start);
+      }
     }
 
     return overlap;

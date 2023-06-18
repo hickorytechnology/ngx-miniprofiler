@@ -43,13 +43,15 @@
                 <span class="mp-unit">ms</span>
 
                 <div class="mp-nested-timing" *ngFor="let tk of customTimings">
-                  <ng-container *ngIf="timing.CustomTimings[tk]">
+                  <ng-container
+                    *ngIf="timing.CustomTimings && timing.CustomTimings[tk]"
+                  >
                     <span class="mp-duration">{{
-                      result.CustomTimingStats[tk]
+                      result.CustomTimingStats![tk]
                     }}</span>
                     <span>
                       {{ encode(tk) }}
-                      <span [ngPlural]="result.CustomTimingStats[tk].Count">
+                      <span [ngPlural]="result.CustomTimingStats![tk].Count">
                         <ng-template ngPluralCase="1">call</ng-template>
                         <ng-template ngPluralCase="few">calls</ng-template>
                       </span>
@@ -61,8 +63,8 @@
                       <span
                         class="mp-warning"
                         *ngIf="
-                          timing.HasDuplicateCustomTimings[tk] ||
-                          timing.HasWarnings[tk]
+                          timing.HasDuplicateCustomTimings![tk] ||
+                          timing.HasWarnings![tk]
                         "
                         >(duplicates deletected)</span
                       >
@@ -91,7 +93,9 @@
         <td
           class="mp-label"
           [title]="encode(timing.Name)"
-          [style.padding-left.px]="timing.Depth > 0 ? timing.Depth * 11 : 0"
+          [style.padding-left.px]="
+            timing.Depth && timing.Depth > 0 ? timing.Depth * 11 : 0
+          "
         >
           {{ encode(timing.Name) }}
         </td>
@@ -124,12 +128,12 @@
             [title]="queriesTitle(timing, tk)"
             (click)="openQueryDialog(timing, $event)"
           >
-            {{ duration(result.CustomTimingStats[tk].Duration) }}
-            ({{ result.CustomTimingStats[tk].Count }})
+            {{ duration(result.CustomTimingStats![tk].Duration) }}
+            ({{ result.CustomTimingStats![tk].Count }})
             <span
               class="mp-warning"
               *ngIf="
-                timing.HasDuplicateCustomTimings[tk] || timing.HasWarnings[tk]
+                timing.HasDuplicateCustomTimings![tk] || timing.HasWarnings![tk]
               "
               >!</span
             >
@@ -157,7 +161,7 @@
     <td class="mp-number">
       {{
         duration(
-          (result.CustomTimingStats[key].Duration /
+          (result.CustomTimingStats![key].Duration /
             result.DurationMilliseconds) *
             100
         )
@@ -183,18 +187,21 @@
 <!-- Links -->
 <div class="mp-links">
   <a
-    href="{{ options.path }}results?id={{ result.Id }}"
+    href="{{ ensureTrailingSlash(options.path) }}results?id={{ result.Id }}"
     class="mp-share-mp-results"
     target="_blank"
     >share</a
   >
-  <a
-    *ngFor="let k of customLinks"
-    href="{{ result.CustomLinks[k] }}"
-    class="mp-custom-link"
-    target="_blank"
-    >{{ k }}</a
-  >
+
+  <ng-container *ngIf="result.CustomLinks">
+    <a
+      *ngFor="let k of customLinks"
+      href="{{ result.CustomLinks[k] }}"
+      class="mp-custom-link"
+      target="_blank"
+      >{{ k }}</a
+    >
+  </ng-container>
   <span>
     <a
       class="mp-toggle-columns"

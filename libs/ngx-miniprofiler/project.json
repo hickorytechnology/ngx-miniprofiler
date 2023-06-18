@@ -1,12 +1,15 @@
 {
-  "projectType": "library",
+  "name": "ngx-miniprofiler",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/ngx-miniprofiler/src",
   "prefix": "ht",
+  "tags": [],
+  "projectType": "library",
   "targets": {
     "build": {
-      "executor": "@nrwl/angular:package",
+      "executor": "@nx/angular:package",
       "outputs": [
-        "dist/libs/ngx-miniprofiler"
+        "{workspaceRoot}/dist/{projectRoot}"
       ],
       "options": {
         "project": "libs/ngx-miniprofiler/ng-package.json"
@@ -22,24 +25,75 @@
       "defaultConfiguration": "production"
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": [
-        "coverage/libs/ngx-miniprofiler"
+        "{workspaceRoot}/coverage/{projectRoot}"
       ],
       "options": {
         "jestConfig": "libs/ngx-miniprofiler/jest.config.ts",
         "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
         "lintFilePatterns": [
           "libs/ngx-miniprofiler/**/*.ts",
           "libs/ngx-miniprofiler/**/*.html"
         ]
       }
+    },
+    "storybook": {
+      "executor": "@storybook/angular:start-storybook",
+      "options": {
+        "port": 4400,
+        "configDir": "libs/ngx-miniprofiler/.storybook",
+        "browserTarget": "ngx-miniprofiler:build-storybook",
+        "compodoc": false
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    },
+    "build-storybook": {
+      "executor": "@storybook/angular:build-storybook",
+      "outputs": [
+        "{options.outputDir}"
+      ],
+      "options": {
+        "outputDir": "dist/storybook/ngx-miniprofiler",
+        "configDir": "libs/ngx-miniprofiler/.storybook",
+        "browserTarget": "ngx-miniprofiler:build-storybook",
+        "compodoc": false
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    },
+    "static-storybook": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "ngx-miniprofiler:build-storybook",
+        "staticFilePath": "dist/storybook/ngx-miniprofiler"
+      },
+      "configurations": {
+        "ci": {
+          "buildTarget": "ngx-miniprofiler:build-storybook:ci"
+        }
+      }
     }
-  },
-  "tags": []
+  }
 }

@@ -4,18 +4,18 @@ export interface IProfiler {
   Started: Date;
   DurationMilliseconds: number;
   MachineName: string;
-  CustomLinks: { [id: string]: string };
+  CustomLinks?: { [id: string]: string };
   Root: ITiming;
-  ClientTimings: IClientTimings;
-  User: string;
-  HasUserViewed: boolean;
+  ClientTimings?: IClientTimings;
+  User?: string;
+  HasUserViewed?: boolean;
   // additive on client side
-  CustomTimingStats: { [id: string]: ICustomTimingStat };
-  HasCustomTimings: boolean;
-  HasDuplicateCustomTimings: boolean;
-  HasWarning: boolean;
-  HasTrivialTimings: boolean;
-  AllCustomTimings: ICustomTiming[];
+  CustomTimingStats?: { [id: string]: ICustomTimingStat };
+  HasCustomTimings?: boolean;
+  HasDuplicateCustomTimings?: boolean;
+  HasWarning?: boolean;
+  HasTrivialTimings?: boolean;
+  AllCustomTimings?: ICustomTiming[];
 }
 
 export interface IClientTimings {
@@ -45,22 +45,22 @@ export interface ITiming {
   Name: string;
   DurationMilliseconds: number;
   StartMilliseconds: number;
-  Children: ITiming[];
-  CustomTimings: { [id: string]: ICustomTiming[] };
+  Children?: ITiming[];
+  CustomTimings?: { [id: string]: ICustomTiming[] };
   // additive on client side
-  CustomTimingStats: { [id: string]: ICustomTimingStat };
-  DurationWithoutChildrenMilliseconds: number;
-  DurationOfChildrenMilliseconds: number;
-  Depth: number;
-  HasCustomTimings: boolean;
-  HasDuplicateCustomTimings: { [id: string]: boolean };
-  HasWarnings: { [id: string]: boolean };
-  IsTrivial: boolean;
-  Parent: ITiming | undefined;
+  CustomTimingStats?: { [id: string]: ICustomTimingStat };
+  DurationWithoutChildrenMilliseconds?: number;
+  DurationOfChildrenMilliseconds?: number;
+  Depth?: number;
+  HasCustomTimings?: boolean;
+  HasDuplicateCustomTimings?: { [id: string]: boolean };
+  HasWarnings?: { [id: string]: boolean };
+  IsTrivial?: boolean;
+  Parent?: ITiming | undefined;
   // added for gaps (TODO: change all this)
-  richTiming: IGapTiming[];
+  richTiming?: IGapTiming[];
   // In debug mode only
-  DebugInfo: ITimingDebugInfo;
+  DebugInfo?: ITimingDebugInfo;
 }
 
 export interface ITimingDebugInfo {
@@ -77,12 +77,12 @@ export interface ICustomTiming {
   FirstFetchDurationMilliseconds?: number;
   Errored: boolean;
   // client side:
-  Parent: ITiming;
-  CallType: string;
-  IsDuplicate: boolean;
+  Parent?: ITiming;
+  CallType?: string;
+  IsDuplicate?: boolean;
   // added for gaps
-  PrevGap: IGapInfo;
-  NextGap: IGapInfo;
+  PrevGap?: IGapInfo;
+  NextGap?: IGapInfo;
 }
 
 export interface ICustomTimingStat {
@@ -132,7 +132,7 @@ export enum RenderPosition {
 export interface IGapTiming {
   start: number;
   finish: number;
-  duration: number;
+  duration?: number;
 }
 
 export interface IGapInfo {

@@ -1,0 +1,40 @@
+<header *ngIf="header" class="t-header">
+  <ng-container *polymorpheusOutlet="header as text; context: context">
+    {{ text }}
+  </ng-container>
+</header>
+<div class="t-content">
+  <h2 class="t-heading" [id]="context.id" [textContent]="context.label"></h2>
+  <section>
+    <!-- TODO: Polymorpheus fix type -->
+    <ng-container
+      *polymorpheusOutlet="$any(context.content) as text; context: context"
+    >
+      <div [innerHTML]="text"></div>
+    </ng-container>
+  </section>
+</div>
+<div class="t-filler"></div>
+<!-- <div *ngIf="context.closeable" class="t-wrapper">
+  <button
+    type="button"
+    class="dialog-close-btn rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+    (click)="close$.next(true)"
+    (mousedown.prevent.silent)="(0)"
+  >
+    <svg
+      class="h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      aria-hidden="true"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M6 18L18 6M6 6l12 12"
+      ></path>
+    </svg>
+  </button>
+</div> -->

@@ -1,5 +1,18 @@
-import { ClientTiming, ColorScheme, ICustomTiming, IGapInfo, IGapReason, IGapTiming, IOptions, IProfiler, ITiming, ITimingInfo, RenderMode, RenderPosition } from "./";
-import { ResultRequest } from "./result-request";
+import {
+  ClientTiming,
+  ColorScheme,
+  ICustomTiming,
+  IGapInfo,
+  IGapReason,
+  IGapTiming,
+  IOptions,
+  IProfiler,
+  ITiming,
+  ITimingInfo,
+  RenderMode,
+  RenderPosition,
+} from './';
+import { ResultRequest } from './result-request';
 
 export class MiniProfiler {
   public options!: IOptions;
@@ -12,14 +25,23 @@ export class MiniProfiler {
     // { name: 'unloadEventEnd', description: 'Unload End' },
     // { name: 'redirectStart', description: 'Redirect Start' },
     // { name: 'redirectEnd', description: 'Redirect End' },
-    { name: 'fetchStart', description: 'Fetch Start', lineDescription: 'Fetch', point: true } as ITimingInfo,
+    {
+      name: 'fetchStart',
+      description: 'Fetch Start',
+      lineDescription: 'Fetch',
+      point: true,
+    } as ITimingInfo,
     {
       name: 'domainLookupStart',
       description: 'Domain Lookup Start',
       lineDescription: 'DNS Lookup',
       type: 'dns',
     } as ITimingInfo,
-    { name: 'domainLookupEnd', description: 'Domain Lookup End', type: 'dns' } as ITimingInfo,
+    {
+      name: 'domainLookupEnd',
+      description: 'Domain Lookup End',
+      type: 'dns',
+    } as ITimingInfo,
     {
       name: 'connectStart',
       description: 'Connect Start',
@@ -32,7 +54,11 @@ export class MiniProfiler {
       lineDescription: 'SSL/TLS Connect',
       type: 'ssl',
     } as ITimingInfo,
-    { name: 'connectEnd', description: 'Connect End', type: 'connect' } as ITimingInfo,
+    {
+      name: 'connectEnd',
+      description: 'Connect End',
+      type: 'connect',
+    } as ITimingInfo,
     {
       name: 'requestStart',
       description: 'Request Start',
@@ -45,8 +71,17 @@ export class MiniProfiler {
       lineDescription: 'Response',
       type: 'response',
     } as ITimingInfo,
-    { name: 'responseEnd', description: 'Response End', type: 'response' } as ITimingInfo,
-    { name: 'domLoading', description: 'DOM Loading', lineDescription: 'DOM Loading', type: 'dom' } as ITimingInfo,
+    {
+      name: 'responseEnd',
+      description: 'Response End',
+      type: 'response',
+    } as ITimingInfo,
+    {
+      name: 'domLoading',
+      description: 'DOM Loading',
+      lineDescription: 'DOM Loading',
+      type: 'dom',
+    } as ITimingInfo,
     {
       name: 'domInteractive',
       description: 'DOM Interactive',
@@ -78,7 +113,11 @@ export class MiniProfiler {
       lineDescription: 'Load Event',
       type: 'load',
     } as ITimingInfo,
-    { name: 'loadEventEnd', description: 'Load Event End', type: 'load' } as ITimingInfo,
+    {
+      name: 'loadEventEnd',
+      description: 'Load Event End',
+      type: 'load',
+    } as ITimingInfo,
     {
       name: 'firstPaintTime',
       description: 'First Paint',
@@ -117,21 +156,23 @@ export class MiniProfiler {
     const bool = (arg: string) => arg === 'true';
 
     this.options = {
-      ids: (data["ids"] || '').split(','),
-      path: data["path"] ?? '',
-      version: data["version"] ?? '',
-      renderPosition: data["position"] as RenderPosition,
-      colorScheme: data["scheme"] as ColorScheme,
-      showTrivial: bool(data["trivial"] ?? ''),
-      trivialMilliseconds: parseFloat(data["trivialMilliseconds"] ?? ''),
-      showChildrenTime: bool(data["children"] ?? ''),
-      maxTracesToShow: parseInt(data["maxTraces"] ?? '', 10),
-      showControls: bool(data["controls"] ?? ''),
-      currentId: data["currentId"] ?? '',
-      authorized: bool(data["authorized"] ?? ''),
-      toggleShortcut: data["toggleShortcut"] ?? '',
-      startHidden: bool(data["startHidden"] ?? ''),
-      ignoredDuplicateExecuteTypes: (data["ignoredDuplicateExecuteTypes"] || '').split(','),
+      ids: (data['ids'] || '').split(','),
+      path: data['path'] ?? '',
+      version: data['version'] ?? '',
+      renderPosition: data['position'] as RenderPosition,
+      colorScheme: data['scheme'] as ColorScheme,
+      showTrivial: bool(data['trivial'] ?? ''),
+      trivialMilliseconds: parseFloat(data['trivialMilliseconds'] ?? ''),
+      showChildrenTime: bool(data['children'] ?? ''),
+      maxTracesToShow: parseInt(data['maxTraces'] ?? '', 10),
+      showControls: bool(data['controls'] ?? ''),
+      currentId: data['currentId'] ?? '',
+      authorized: bool(data['authorized'] ?? ''),
+      toggleShortcut: data['toggleShortcut'] ?? '',
+      startHidden: bool(data['startHidden'] ?? ''),
+      ignoredDuplicateExecuteTypes: (
+        data['ignoredDuplicateExecuteTypes'] || ''
+      ).split(','),
     };
 
     function doInit() {
@@ -156,7 +197,9 @@ export class MiniProfiler {
 
           let lsDisplayValue;
           try {
-            lsDisplayValue = window.localStorage.getItem('MiniProfiler-Display');
+            lsDisplayValue = window.localStorage.getItem(
+              'MiniProfiler-Display'
+            );
           } catch (e) {
             return;
           }
@@ -194,7 +237,9 @@ export class MiniProfiler {
         mp.container.insertAdjacentHTML('beforeend', profilerHtml);
 
         // highight
-        mp.container.querySelectorAll('pre code').forEach((block) => mp.highlight(block as HTMLElement));
+        mp.container
+          .querySelectorAll('pre code')
+          .forEach((block) => mp.highlight(block as HTMLElement));
 
         mp.bindDocumentEvents(RenderMode.Full);
       } else {
@@ -248,9 +293,15 @@ export class MiniProfiler {
 
     function updateGrid(id?: string) {
       const getTiming = (profiler: IProfiler, name: string) =>
-        profiler.ClientTimings.Timings.filter((t) => t.Name === name)[0] || { Name: name, Duration: '', Start: '' };
+        profiler.ClientTimings.Timings.filter((t) => t.Name === name)[0] || {
+          Name: name,
+          Duration: '',
+          Start: '',
+        };
 
-      document.documentElement.classList.add('mp-scheme-' + opt.colorScheme.toLowerCase());
+      document.documentElement.classList.add(
+        'mp-scheme-' + opt.colorScheme.toLowerCase()
+      );
       fetch(opt.path + 'results-list?last-id=' + id, {
         method: 'GET',
         headers: {
@@ -265,7 +316,9 @@ export class MiniProfiler {
             html +=
               `
 <tr>
-<td><a href="${options.path}results?id=${profiler.Id}">${mp.htmlEscape(profiler.Name)}</a></td>
+<td><a href="${options.path}results?id=${profiler.Id}">${mp.htmlEscape(
+                profiler.Name
+              )}</a></td>
 <td>${mp.htmlEscape(profiler.MachineName)}</td>
 <td class="mp-results-index-date">${profiler.Started}</td>
 <td>${profiler.DurationMilliseconds}</td>` +
@@ -279,7 +332,9 @@ export class MiniProfiler {
               `
 </tr>`;
           });
-          document.querySelector('.mp-results-index')?.insertAdjacentHTML('beforeend', html);
+          document
+            .querySelector('.mp-results-index')
+            ?.insertAdjacentHTML('beforeend', html);
           const oldId = id;
           const oldData = data;
           setTimeout(() => {
@@ -297,7 +352,10 @@ export class MiniProfiler {
   private fetchResults = (ids: string[]) => {
     for (let i = 0; ids && i < ids.length; i++) {
       const id = ids[i];
-      const request = new ResultRequest(id, id === this.options.currentId ? this.clientPerfTimings : []);
+      const request = new ResultRequest(
+        id,
+        id === this.options.currentId ? this.clientPerfTimings : []
+      );
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const mp = this;
 
@@ -305,9 +363,12 @@ export class MiniProfiler {
         continue; // empty id or already fetching
       }
 
-      const isoDate = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)(?:Z|(\+|-)([\d|:]*))?$/;
+      const isoDate =
+        /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)(?:Z|(\+|-)([\d|:]*))?$/;
       const parseDates = (key: string, value: any) =>
-        key === 'Started' && typeof value === 'string' && isoDate.exec(value) ? new Date(value) : value;
+        key === 'Started' && typeof value === 'string' && isoDate.exec(value)
+          ? new Date(value)
+          : value;
 
       mp.fetchStatus[id] = 'Starting fetch';
 
@@ -345,7 +406,11 @@ export class MiniProfiler {
     result.CustomLinks = result.CustomLinks || {};
     result.AllCustomTimings = [];
 
-    function processTiming(timing: ITiming, parent: ITiming | undefined, depth: number) {
+    function processTiming(
+      timing: ITiming,
+      parent: ITiming | undefined,
+      depth: number
+    ) {
       timing.DurationWithoutChildrenMilliseconds = timing.DurationMilliseconds;
       timing.DurationOfChildrenMilliseconds = 0;
       timing.Parent = parent;
@@ -355,19 +420,26 @@ export class MiniProfiler {
 
       for (const child of timing.Children || []) {
         processTiming(child, timing, depth + 1);
-        timing.DurationWithoutChildrenMilliseconds -= child.DurationMilliseconds;
+        timing.DurationWithoutChildrenMilliseconds -=
+          child.DurationMilliseconds;
         timing.DurationOfChildrenMilliseconds += child.DurationMilliseconds;
       }
 
       // do this after subtracting child durations
-      if (timing.DurationWithoutChildrenMilliseconds < mp.options.trivialMilliseconds) {
+      if (
+        timing.DurationWithoutChildrenMilliseconds <
+        mp.options.trivialMilliseconds
+      ) {
         timing.IsTrivial = true;
         result.HasTrivialTimings = true;
       }
 
       function ignoreDuplicateCustomTiming(customTiming: ICustomTiming) {
         return (
-          customTiming.ExecuteType && mp.options.ignoredDuplicateExecuteTypes.indexOf(customTiming.ExecuteType) > -1
+          customTiming.ExecuteType &&
+          mp.options.ignoredDuplicateExecuteTypes.indexOf(
+            customTiming.ExecuteType
+          ) > -1
         );
       }
 
@@ -376,7 +448,8 @@ export class MiniProfiler {
         timing.HasCustomTimings = true;
         result.HasCustomTimings = true;
         for (const customType of Object.keys(timing.CustomTimings)) {
-          const customTimings = timing.CustomTimings[customType] || ([] as ICustomTiming[]);
+          const customTimings =
+            timing.CustomTimings[customType] || ([] as ICustomTiming[]);
           const customStat = {
             Duration: 0,
             Count: 0,
@@ -399,7 +472,10 @@ export class MiniProfiler {
               result.HasWarning = true;
             }
 
-            if (customTiming.CommandString && duplicates[customTiming.CommandString]) {
+            if (
+              customTiming.CommandString &&
+              duplicates[customTiming.CommandString]
+            ) {
               customTiming.IsDuplicate = true;
               timing.HasDuplicateCustomTimings[customType] = true;
               result.HasDuplicateCustomTimings = true;
@@ -441,7 +517,10 @@ export class MiniProfiler {
             newList.push(item);
             continue;
           }
-          newList.push({ start: item.start, finish: duration.start } as IGapTiming);
+          newList.push({
+            start: item.start,
+            finish: duration.start,
+          } as IGapTiming);
         }
 
         if (duration.finish < item.finish) {
@@ -449,7 +528,10 @@ export class MiniProfiler {
             newList.push(item);
             continue;
           }
-          newList.push({ start: duration.finish, finish: item.finish } as IGapTiming);
+          newList.push({
+            start: duration.finish,
+            finish: item.finish,
+          } as IGapTiming);
         }
       }
 
@@ -463,7 +545,10 @@ export class MiniProfiler {
       } as IGapTiming;
       elem.richTiming = [duration];
       if (elem.Parent != null) {
-        elem.Parent.richTiming = removeDuration(elem.Parent.richTiming, duration);
+        elem.Parent.richTiming = removeDuration(
+          elem.Parent.richTiming,
+          duration
+        );
       }
 
       for (const child of elem.Children || []) {
@@ -485,12 +570,18 @@ export class MiniProfiler {
           continue;
         }
 
-        overlap += Math.min(gap.finish, current.finish) - Math.max(gap.start, current.start);
+        overlap +=
+          Math.min(gap.finish, current.finish) -
+          Math.max(gap.start, current.start);
       }
       return overlap;
     }
 
-    function determineGap(gap: IGapInfo, node: ITiming, match: IGapReason | undefined): IGapReason {
+    function determineGap(
+      gap: IGapInfo,
+      node: ITiming,
+      match: IGapReason | undefined
+    ): IGapReason {
       const overlap = determineOverlap(gap, node);
       if (match == null || overlap > match.duration) {
         match = { name: node.Name, duration: overlap };
@@ -512,7 +603,11 @@ export class MiniProfiler {
         finish: elem.StartMilliseconds,
       } as IGapInfo;
 
-      elem.PrevGap.Reason = determineGap(elem.PrevGap, profiler.Root, undefined);
+      elem.PrevGap.Reason = determineGap(
+        elem.PrevGap,
+        profiler.Root,
+        undefined
+      );
 
       time = elem.StartMilliseconds + elem.DurationMilliseconds;
     });
@@ -543,28 +638,40 @@ export class MiniProfiler {
     const mp = this;
     const p = this.processJson(json);
     const encode = this.htmlEscape;
-    const duration = (milliseconds: number | undefined, decimalPlaces?: number) => {
+    const duration = (
+      milliseconds: number | undefined,
+      decimalPlaces?: number
+    ) => {
       if (milliseconds === undefined) {
         return '';
       }
-      return (milliseconds || 0).toFixed(decimalPlaces === undefined ? 1 : decimalPlaces);
+      return (milliseconds || 0).toFixed(
+        decimalPlaces === undefined ? 1 : decimalPlaces
+      );
     };
     const renderDebugInfo = (timing: ITiming) => {
       if (timing.DebugInfo) {
-        const customTimings = (p.CustomTimingStats ? Object.keys(p.CustomTimingStats) : [])
+        const customTimings = (
+          p.CustomTimingStats ? Object.keys(p.CustomTimingStats) : []
+        )
           .map((tk) =>
             timing.CustomTimings[tk]
               ? `
               <div class="mp-nested-timing">
-                  <span class="mp-duration">${timing.CustomTimingStats[tk].Count}</span> ${encode(tk)} call${timing.CustomTimingStats[tk].Count == 1 ? '' : 's'
-              }
+                  <span class="mp-duration">${
+                    timing.CustomTimingStats[tk].Count
+                  }</span> ${encode(tk)} call${
+                  timing.CustomTimingStats[tk].Count == 1 ? '' : 's'
+                }
                   totalling <span class="mp-duration">${duration(
-                timing.CustomTimingStats[tk].Duration
-              )}</span> <span class="mp-unit">ms</span>
-                  ${timing.HasDuplicateCustomTimings[tk] || timing.HasWarnings[tk]
-                ? '<span class="mp-warning">(duplicates deletected)</span>'
-                : ''
-              }
+                    timing.CustomTimingStats[tk].Duration
+                  )}</span> <span class="mp-unit">ms</span>
+                  ${
+                    timing.HasDuplicateCustomTimings[tk] ||
+                    timing.HasWarnings[tk]
+                      ? '<span class="mp-warning">(duplicates deletected)</span>'
+                      : ''
+                  }
               </div>`
               : ''
           )
@@ -573,23 +680,24 @@ export class MiniProfiler {
         <div class="mp-debug-tooltip">
           <div class="mp-name">Detailed info for ${encode(timing.Name)}</div>
           <div>Starts at: <span class="mp-duration">${duration(
-          timing.StartMilliseconds
-        )}</span> <span class="mp-unit">ms</span></div>
+            timing.StartMilliseconds
+          )}</span> <span class="mp-unit">ms</span></div>
           <div>
               Overall duration (with children): <span class="mp-duration">${duration(
-          timing.DurationMilliseconds
-        )}</span> <span class="mp-unit">ms</span>
+                timing.DurationMilliseconds
+              )}</span> <span class="mp-unit">ms</span>
               <div class="mp-nested-timing">
                 Self duration: <span class="mp-duration">${duration(
-          timing.DurationWithoutChildrenMilliseconds
-        )}</span> <span class="mp-unit">ms</span>
+                  timing.DurationWithoutChildrenMilliseconds
+                )}</span> <span class="mp-unit">ms</span>
                 ${customTimings}
               </div>
               <div class="mp-nested-timing">
-                Children (${timing.Children ? timing.Children.length : '0'
-          }) duration: <span class="mp-duration">${duration(
-            timing.DurationOfChildrenMilliseconds
-          )}</span> <span class="mp-unit">ms</span>
+                Children (${
+                  timing.Children ? timing.Children.length : '0'
+                }) duration: <span class="mp-duration">${duration(
+          timing.DurationOfChildrenMilliseconds
+        )}</span> <span class="mp-unit">ms</span>
               </div>
           </div>
           <div>Stack:</div>
@@ -601,12 +709,17 @@ export class MiniProfiler {
     };
 
     const renderTiming = (timing: ITiming) => {
-      const customTimingTypes = p.CustomTimingStats ? Object.keys(p.CustomTimingStats) : [];
+      const customTimingTypes = p.CustomTimingStats
+        ? Object.keys(p.CustomTimingStats)
+        : [];
       let str = `
-<tr class="${timing.IsTrivial ? 'mp-trivial' : ''}${timing.DebugInfo ? ' mp-debug' : ''}" data-timing-id="${timing.Id}">
+<tr class="${timing.IsTrivial ? 'mp-trivial' : ''}${
+        timing.DebugInfo ? ' mp-debug' : ''
+      }" data-timing-id="${timing.Id}">
   <td>${renderDebugInfo(timing)}</td>
-  <td class="mp-label" title="${encode(timing.Name)}"${timing.Depth > 0 ? ` style="padding-left:${timing.Depth * 11}px;"` : ''
-        }>
+  <td class="mp-label" title="${encode(timing.Name)}"${
+        timing.Depth > 0 ? ` style="padding-left:${timing.Depth * 11}px;"` : ''
+      }>
     ${encode(timing.Name)}
   </td>
   <td class="mp-duration" title="duration of this step without any children's durations">
@@ -619,22 +732,30 @@ export class MiniProfiler {
     <span class="mp-unit">+</span>${duration(timing.StartMilliseconds)}
   </td>
   ${customTimingTypes
-          .map((tk) =>
-            timing.CustomTimings[tk]
-              ? `
+    .map((tk) =>
+      timing.CustomTimings[tk]
+        ? `
   <td class="mp-duration">
-    <a class="mp-queries-show${timing.HasWarnings[tk] ? ' mp-queries-warning' : ''}" title="${duration(
-                timing.CustomTimingStats[tk].Duration
-              )} ms in ${timing.CustomTimingStats[tk].Count} ${encode(tk)} call(s)${timing.HasDuplicateCustomTimings[tk] ? '; duplicate calls detected!' : ''
-              }">
+    <a class="mp-queries-show${
+      timing.HasWarnings[tk] ? ' mp-queries-warning' : ''
+    }" title="${duration(timing.CustomTimingStats[tk].Duration)} ms in ${
+            timing.CustomTimingStats[tk].Count
+          } ${encode(tk)} call(s)${
+            timing.HasDuplicateCustomTimings[tk]
+              ? '; duplicate calls detected!'
+              : ''
+          }">
       ${duration(timing.CustomTimingStats[tk].Duration)}
-      (${timing.CustomTimingStats[tk].Count}${timing.HasDuplicateCustomTimings[tk] || timing.HasWarnings[tk] ? '<span class="mp-warning">!</span>' : ''
-              })
+      (${timing.CustomTimingStats[tk].Count}${
+            timing.HasDuplicateCustomTimings[tk] || timing.HasWarnings[tk]
+              ? '<span class="mp-warning">!</span>'
+              : ''
+          })
     </a>
   </td>`
-              : '<td></td>'
-          )
-          .join('')}
+        : '<td></td>'
+    )
+    .join('')}
 </tr>`;
       // Append children
       if (timing.Children) {
@@ -652,8 +773,8 @@ export class MiniProfiler {
             <th class="mp-more-columns">with children (ms)</th>
             <th class="time-from-start mp-more-columns">from start (ms)</th>
             ${Object.keys(p.CustomTimingStats)
-        .map((k) => `<th title="call count">${encode(k)} (ms)</th>`)
-        .join('')}
+              .map((k) => `<th title="call count">${encode(k)} (ms)</th>`)
+              .join('')}
           </tr>
         </thead>
         <tbody>
@@ -674,11 +795,13 @@ export class MiniProfiler {
       return `
       <table class="mp-custom-timing-overview">
           ${Object.getOwnPropertyNames(p.CustomTimingStats)
-          .map(
-            (key) => `
-        <tr title="${p.CustomTimingStats[key].Count} ${encode(key.toLowerCase())} calls spent ${duration(
-              p.CustomTimingStats[key].Duration
-            )} ms of total request time">
+            .map(
+              (key) => `
+        <tr title="${p.CustomTimingStats[key].Count} ${encode(
+                key.toLowerCase()
+              )} calls spent ${duration(
+                p.CustomTimingStats[key].Duration
+              )} ms of total request time">
           <td class="mp-number">
             ${encode(key)}:
           </td>
@@ -688,8 +811,8 @@ export class MiniProfiler {
             )} <span class="mp-unit">%</span>
           </td>
         </tr>`
-          )
-          .join('')}
+            )
+            .join('')}
       </table>`;
     };
 
@@ -700,19 +823,20 @@ export class MiniProfiler {
 
       let end = 0;
       const list: {
-        isTrivial: boolean,
-        name: string,
-        duration: number,
-        type: string,
-        point: boolean | undefined,
-        start: number,
-        left: string | null,
-        width: string | null,
+        isTrivial: boolean;
+        name: string;
+        duration: number;
+        type: string;
+        point: boolean | undefined;
+        start: number;
+        left: string | null;
+        width: string | null;
       }[] = p.ClientTimings.Timings.map((t: ClientTiming) => {
         const results = mp.clientPerfTimings
           ? mp.clientPerfTimings.filter((pt: ITimingInfo) => pt.name === t.Name)
           : [];
-        const info: ITimingInfo | undefined = results.length > 0 ? results[0] : undefined;
+        const info: ITimingInfo | undefined =
+          results.length > 0 ? results[0] : undefined;
         end = Math.max(end, t.Start + t.Duration);
 
         return {
@@ -726,7 +850,8 @@ export class MiniProfiler {
           width: null,
         };
       });
-      p.HasTrivialTimings = p.HasTrivialTimings || list.some((t) => t.isTrivial);
+      p.HasTrivialTimings =
+        p.HasTrivialTimings || list.some((t) => t.isTrivial);
 
       list.sort((a, b) => a.start - b.start);
       list.forEach((l) => {
@@ -747,21 +872,28 @@ export class MiniProfiler {
         </thead>
         <tbody>
           ${list
-          .map(
-            (t) => `
+            .map(
+              (t) => `
           <tr class="${t.isTrivial ? 'mp-trivial' : ''}">
             <td class="mp-label">${encode(t.name)}</td>
-            <td class="t-${t.type}${t.point ? ' t-point' : ''}"><div style="margin-left: ${t.left}; width: ${t.width
+            <td class="t-${t.type}${
+                t.point ? ' t-point' : ''
+              }"><div style="margin-left: ${t.left}; width: ${
+                t.width
               };"></div></td>
             <td class="mp-duration">
-              ${(t.duration ?? 0) >= 0 ? `<span class="mp-unit"></span>${duration(t.duration, 0)}` : ''}
+              ${
+                (t.duration ?? 0) >= 0
+                  ? `<span class="mp-unit"></span>${duration(t.duration, 0)}`
+                  : ''
+              }
             </td>
             <td class="mp-duration time-from-start mp-more-columns">
               <span class="mp-unit">+</span>${duration(t.start, 0)}
             </td>
           </tr>`
-          )
-          .join('')}
+            )
+            .join('')}
         </tbody>
       </table>`;
     };
@@ -780,7 +912,9 @@ export class MiniProfiler {
     ${gap.duration} <span class="mp-unit">ms</span>
   </td>
   <td class="query">
-    <div>${encode(gap.Reason?.name ?? '')} &mdash; ${duration.toFixed(2)} <span class="mp-unit">ms</span></div>
+    <div>${encode(gap.Reason?.name ?? '')} &mdash; ${duration.toFixed(
+              2
+            )} <span class="mp-unit">ms</span></div>
   </td>
 </tr>`
           : '';
@@ -804,35 +938,50 @@ export class MiniProfiler {
       </thead>
       <tbody>
         ${p.AllCustomTimings.map(
-        (ct, index) => `
+          (ct, index) => `
           ${renderGap(ct.PrevGap)}
-          <tr class="${index % 2 === 1 ? 'mp-odd' : ''}" data-timing-id="${ct.Parent.Id}">
+          <tr class="${index % 2 === 1 ? 'mp-odd' : ''}" data-timing-id="${
+            ct.Parent.Id
+          }">
             <td>
-              <div class="mp-call-type${ct.Errored ? ' mp-warning' : ''}">${encode(ct.CallType)}${encode(
-          !ct.ExecuteType || ct.CallType === ct.ExecuteType ? '' : ' - ' + ct.ExecuteType
-        )}${ct.IsDuplicate || ct.Errored ? ' <span class="mp-warning" title="Duplicate">!</span>' : ''}</div>
+              <div class="mp-call-type${
+                ct.Errored ? ' mp-warning' : ''
+              }">${encode(ct.CallType)}${encode(
+            !ct.ExecuteType || ct.CallType === ct.ExecuteType
+              ? ''
+              : ' - ' + ct.ExecuteType
+          )}${
+            ct.IsDuplicate || ct.Errored
+              ? ' <span class="mp-warning" title="Duplicate">!</span>'
+              : ''
+          }</div>
               <div>${encode(ct.Parent.Name)}</div>
               <div class="mp-number">
-                ${duration(ct.DurationMilliseconds)} <span class="mp-unit">ms (T+${duration(
-          ct.StartMilliseconds
-        )} ms)</span>
+                ${duration(
+                  ct.DurationMilliseconds
+                )} <span class="mp-unit">ms (T+${duration(
+            ct.StartMilliseconds
+          )} ms)</span>
               </div>
-              ${ct.FirstFetchDurationMilliseconds
-            ? `<div>First Result: ${duration(
-              ct.FirstFetchDurationMilliseconds
-            )} <span class="mp-unit">ms</span></div>`
-            : ''
-          }
+              ${
+                ct.FirstFetchDurationMilliseconds
+                  ? `<div>First Result: ${duration(
+                      ct.FirstFetchDurationMilliseconds
+                    )} <span class="mp-unit">ms</span></div>`
+                  : ''
+              }
             </td>
             <td>
               <div class="query">
-                <div class="mp-stack-trace">${encode(ct.StackTraceSnippet)}</div>
+                <div class="mp-stack-trace">${encode(
+                  ct.StackTraceSnippet
+                )}</div>
                 <pre><code>${encode(ct.CommandString)}</code></pre>
               </div>
             </td>
           </tr>
           ${renderGap(ct.NextGap)}`
-      ).join('')}
+        ).join('')}
       </tbody>
     </table>
     <p class="mp-trivial-gap-container">
@@ -842,11 +991,20 @@ export class MiniProfiler {
     };
 
     return `
-<div class="mp-result${this.options.showTrivial ? ' show-trivial' : ''}${this.options.showChildrenTime ? ' show-columns' : ''
-      }${isNew ? ' new' : ''}">
-  <div class="mp-button${p.HasWarning ? ' mp-button-warning' : ''}" title="${encode(p.Name)}">
-    <span class="mp-number">${duration(p.DurationMilliseconds)} <span class="mp-unit">ms</span></span>
-    ${p.HasDuplicateCustomTimings || p.HasWarning ? '<span class="mp-warning">!</span>' : ''}
+<div class="mp-result${this.options.showTrivial ? ' show-trivial' : ''}${
+      this.options.showChildrenTime ? ' show-columns' : ''
+    }${isNew ? ' new' : ''}">
+  <div class="mp-button${
+    p.HasWarning ? ' mp-button-warning' : ''
+  }" title="${encode(p.Name)}">
+    <span class="mp-number">${duration(
+      p.DurationMilliseconds
+    )} <span class="mp-unit">ms</span></span>
+    ${
+      p.HasDuplicateCustomTimings || p.HasWarning
+        ? '<span class="mp-warning">!</span>'
+        : ''
+    }
   </div>
   <div class="mp-popup">
     <div class="mp-info">
@@ -855,8 +1013,12 @@ export class MiniProfiler {
         <div class="mp-machine-name">${encode(p.MachineName)}</div>
       </div>
       <div>
-        <div class="mp-overall-duration">(${duration(p.DurationMilliseconds)} ms)</div>
-        <div class="mp-started">${p.Started ? p.Started.toUTCString() : ''}</div>
+        <div class="mp-overall-duration">(${duration(
+          p.DurationMilliseconds
+        )} ms)</div>
+        <div class="mp-started">${
+          p.Started ? p.Started.toUTCString() : ''
+        }</div>
       </div>
     </div>
     <div class="mp-output">
@@ -864,19 +1026,25 @@ export class MiniProfiler {
   ${customTimings()}
       ${clientTimings()}
       <div class="mp-links">
-        <a href="${this.options.path}results?id=${p.Id}" class="mp-share-mp-results" target="_blank">share</a>
+        <a href="${this.options.path}results?id=${
+      p.Id
+    }" class="mp-share-mp-results" target="_blank">share</a>
         ${Object.keys(p.CustomLinks)
-        .map((k) => `<a href="${p.CustomLinks[k]}" class="mp-custom-link" target="_blank">${k}</a>`)
-        .join('')}
+          .map(
+            (k) =>
+              `<a href="${p.CustomLinks[k]}" class="mp-custom-link" target="_blank">${k}</a>`
+          )
+          .join('')}
       <span>
           <a class="mp-toggle-columns" title="shows additional columns">more columns</a>
           <a class="mp-toggle-columns mp-more-columns" title="hides additional columns">fewer columns</a>
-          ${p.HasTrivialTimings
-        ? `
+          ${
+            p.HasTrivialTimings
+              ? `
           <a class="mp-toggle-trivial" title="shows any rows with &lt; ${this.options.trivialMilliseconds} ms duration">show trivial</a>
           <a class="mp-toggle-trivial mp-trivial" title="hides any rows with &lt; ${this.options.trivialMilliseconds} ms duration">hide trivial</a>`
-        : ''
-      }
+              : ''
+          }
         </span>
       </div>
     </div>
@@ -909,8 +1077,9 @@ export class MiniProfiler {
   };
 
   private scrollToQuery = (link: HTMLElement, queries: HTMLElement | null) => {
-    const id = link.closest('tr')?.dataset["timingId"];
-    const rows = queries?.querySelectorAll('tr[data-timing-id="' + id + '"]') ?? [];
+    const id = link.closest('tr')?.dataset['timingId'];
+    const rows =
+      queries?.querySelectorAll('tr[data-timing-id="' + id + '"]') ?? [];
     rows.forEach((n) => n.classList.add('highlight'));
     if (rows && rows[0]) {
       rows[0].scrollIntoView();
@@ -944,25 +1113,34 @@ export class MiniProfiler {
       // since queries are already shown, just highlight and scroll when clicking a '1 sql' link
       document.addEventListener('click', function (event) {
         const target = event.target as HTMLElement;
-        const queriesButton = target.closest<HTMLElement>('.mp-popup .mp-queries-show');
+        const queriesButton = target.closest<HTMLElement>(
+          '.mp-popup .mp-queries-show'
+        );
         if (queriesButton) {
-          mp.scrollToQuery(queriesButton, document.body.querySelector('.mp-queries'));
+          mp.scrollToQuery(
+            queriesButton,
+            document.body.querySelector('.mp-queries')
+          );
         }
       });
-      document.documentElement.classList.add('mp-scheme-' + mp.options.colorScheme.toLowerCase());
+      document.documentElement.classList.add(
+        'mp-scheme-' + mp.options.colorScheme.toLowerCase()
+      );
     } else {
       document.addEventListener('click', function (event) {
         const target = event.target as HTMLElement;
         const button = target.closest<HTMLElement>('.mp-button');
         if (button && button.parentElement) {
-          const popup = button.parentElement.querySelector<HTMLDivElement>('.mp-popup');
+          const popup =
+            button.parentElement.querySelector<HTMLDivElement>('.mp-popup');
           const wasActive = button.parentElement.classList.contains('active');
           const pos = mp.options.renderPosition;
 
           const parent = button.parentElement;
           parent?.classList.remove('new');
 
-          const allChildren = button.parentElement.parentElement?.children ?? [];
+          const allChildren =
+            button.parentElement.parentElement?.children ?? [];
           for (let i = 0; i < allChildren.length; i++) {
             // Set Active only on the curent button
             allChildren[i].classList.toggle('active', allChildren[i] == parent);
@@ -970,19 +1148,32 @@ export class MiniProfiler {
 
           if (!wasActive && popup) {
             // move left or right, based on config
-            popup.style[pos === RenderPosition.Left || pos === RenderPosition.BottomLeft ? 'left' : 'right'] = `${button.offsetWidth - 1
-              }px`;
+            popup.style[
+              pos === RenderPosition.Left || pos === RenderPosition.BottomLeft
+                ? 'left'
+                : 'right'
+            ] = `${button.offsetWidth - 1}px`;
 
             // is this rendering on the bottom (if no, then is top by default)
-            if (pos === RenderPosition.BottomLeft || pos === RenderPosition.BottomRight) {
+            if (
+              pos === RenderPosition.BottomLeft ||
+              pos === RenderPosition.BottomRight
+            ) {
               const bottom =
-                window.innerHeight - button.getBoundingClientRect().top - button.offsetHeight + window.scrollY; // get bottom of button
+                window.innerHeight -
+                button.getBoundingClientRect().top -
+                button.offsetHeight +
+                window.scrollY; // get bottom of button
               popup.style.bottom = '0';
               popup.style.maxHeight = 'calc(100vh - ' + (bottom + 25) + 'px)';
             } else {
               popup.style.top = '0';
               popup.style.maxHeight =
-                'calc(100vh - ' + (button.getBoundingClientRect().top - window.window.scrollY + 25) + 'px)';
+                'calc(100vh - ' +
+                (button.getBoundingClientRect().top -
+                  window.window.scrollY +
+                  25) +
+                'px)';
             }
           }
           return;
@@ -990,18 +1181,27 @@ export class MiniProfiler {
         const queriesButton = target.closest<HTMLElement>('.mp-queries-show');
         if (queriesButton) {
           // opaque background
-          document.body.insertAdjacentHTML('beforeend', '<div class="mp-overlay"><div class="mp-overlay-bg"/></div>');
+          document.body.insertAdjacentHTML(
+            'beforeend',
+            '<div class="mp-overlay"><div class="mp-overlay-bg"/></div>'
+          );
           const overlay = document.querySelector('.mp-overlay');
-          const queriesOrig = queriesButton.closest('.mp-result')?.querySelector('.mp-queries');
+          const queriesOrig = queriesButton
+            .closest('.mp-result')
+            ?.querySelector('.mp-queries');
           const queries = queriesOrig?.cloneNode(true) as HTMLDivElement;
           queries.style.display = 'block';
-          overlay?.classList.add('mp-scheme-' + mp.options.colorScheme.toLowerCase());
+          overlay?.classList.add(
+            'mp-scheme-' + mp.options.colorScheme.toLowerCase()
+          );
           overlay?.appendChild(queries);
 
           mp.scrollToQuery(queriesButton, queries);
 
           // syntax highlighting
-          queries.querySelectorAll('pre code').forEach((block) => mp.highlight(block as HTMLElement));
+          queries
+            .querySelectorAll('pre code')
+            .forEach((block) => mp.highlight(block as HTMLElement));
           return;
         }
       });
@@ -1015,7 +1215,8 @@ export class MiniProfiler {
 
         const bg = document.querySelector<HTMLDivElement>('.mp-overlay');
         const isEscPress = event.type === 'keyup' && event.which === 27;
-        const isBgClick = event.type === 'click' && !target.closest('.mp-queries, .mp-results');
+        const isBgClick =
+          event.type === 'click' && !target.closest('.mp-queries, .mp-results');
 
         if (isEscPress || isBgClick) {
           if (bg && bg.offsetParent !== null) {
@@ -1028,7 +1229,10 @@ export class MiniProfiler {
       document.addEventListener('click', tryCloseActive);
       document.addEventListener('keyup', tryCloseActive);
 
-      if (mp.options.toggleShortcut && !mp.options.toggleShortcut.match(/^None$/i)) {
+      if (
+        mp.options.toggleShortcut &&
+        !mp.options.toggleShortcut.match(/^None$/i)
+      ) {
         /**
          * Based on http://www.openjs.com/scripts/events/keyboard_shortcuts/
          * Version : 2.01.B
@@ -1049,7 +1253,10 @@ export class MiniProfiler {
               element = element.parentElement;
             }
 
-            if (element !== null && (element.tagName == 'INPUT' || element.tagName == 'TEXTAREA')) {
+            if (
+              element !== null &&
+              (element.tagName == 'INPUT' || element.tagName == 'TEXTAREA')
+            ) {
               return;
             }
 
@@ -1178,7 +1385,10 @@ export class MiniProfiler {
                 // The special keys did not match
                 if (character == k) {
                   kp++;
-                } else if (shift_nums[character as keyof typeof shift_nums] && e.shiftKey) {
+                } else if (
+                  shift_nums[character as keyof typeof shift_nums] &&
+                  e.shiftKey
+                ) {
                   // Stupid Shift key bug created by using lowercase
                   character = shift_nums[character as keyof typeof shift_nums];
                   if (character == k) {
@@ -1193,9 +1403,11 @@ export class MiniProfiler {
               e.shiftKey == modifiers.shift.wanted &&
               e.altKey == modifiers.alt.wanted
             ) {
-              const results = document.querySelector<HTMLElement>('.mp-results');
+              const results =
+                document.querySelector<HTMLElement>('.mp-results');
               if (results) {
-                const newValue = results.style.display == 'none' ? 'block' : 'none';
+                const newValue =
+                  results.style.display == 'none' ? 'block' : 'none';
                 results.style.display = newValue;
                 try {
                   window.localStorage.setItem('MiniProfiler-Display', newValue);
@@ -1219,14 +1431,18 @@ export class MiniProfiler {
       );
       this.controls = container.querySelector<HTMLDivElement>('.mp-controls');
 
-      const minMax = container.querySelector<HTMLSpanElement>('.mp-controls .mp-min-max');
+      const minMax = container.querySelector<HTMLSpanElement>(
+        '.mp-controls .mp-min-max'
+      );
       if (minMax) {
         minMax.addEventListener('click', function () {
           container.classList.toggle('mp-min');
         });
       }
 
-      const clear = container.querySelector<HTMLSpanElement>('.mp-controls .mp-clear');
+      const clear = container.querySelector<HTMLSpanElement>(
+        '.mp-controls .mp-clear'
+      );
       if (clear) {
         clear.addEventListener('click', function () {
           const results = container.querySelectorAll('.mp-result');
@@ -1263,13 +1479,21 @@ export class MiniProfiler {
     const windowjQuery = window.jQuery;
 
     // fetch profile results for any AJAX calls
-    if (windowjQuery && windowjQuery(document) && windowjQuery(document).ajaxComplete) {
-      windowjQuery(document).ajaxComplete((_e: any, xhr: XMLHttpRequest, _settings: any) => handleXHR(xhr));
+    if (
+      windowjQuery &&
+      windowjQuery(document) &&
+      windowjQuery(document).ajaxComplete
+    ) {
+      windowjQuery(document).ajaxComplete(
+        (_e: any, xhr: XMLHttpRequest, _settings: any) => handleXHR(xhr)
+      );
     }
 
     // more Asp.Net callbacks
     if (typeof window.WebForm_ExecuteCallback === 'function') {
-      window.WebForm_ExecuteCallback = ((callbackObject: { xmlRequest: XMLHttpRequest } | null) => {
+      window.WebForm_ExecuteCallback = ((
+        callbackObject: { xmlRequest: XMLHttpRequest } | null
+      ) => {
         // Store original function
         const original = window.WebForm_ExecuteCallback;
 
@@ -1281,7 +1505,10 @@ export class MiniProfiler {
     }
 
     // add support for AngularJS, which uses the basic XMLHttpRequest object.
-    if ((window.angular || window.axios || window.xhr) && typeof XMLHttpRequest !== 'undefined') {
+    if (
+      (window.angular || window.axios || window.xhr) &&
+      typeof XMLHttpRequest !== 'undefined'
+    ) {
       const oldSend = XMLHttpRequest.prototype.send;
 
       XMLHttpRequest.prototype.send = function sendReplacement(data, ...args) {
@@ -1292,7 +1519,9 @@ export class MiniProfiler {
             typeof self.miniprofiler === 'undefined' ||
             typeof self.miniprofiler.prev_onreadystatechange === 'undefined'
           ) {
-            self.miniprofiler = { prev_onreadystatechange: this.onreadystatechange };
+            self.miniprofiler = {
+              prev_onreadystatechange: this.onreadystatechange,
+            };
 
             this.onreadystatechange = function onReadyStateChangeReplacement() {
               if (this.readyState === 4) {
@@ -1300,12 +1529,18 @@ export class MiniProfiler {
               }
 
               if (self.miniprofiler.prev_onreadystatechange != null) {
-                return self.miniprofiler.prev_onreadystatechange.apply(this, args);
+                return self.miniprofiler.prev_onreadystatechange.apply(
+                  this,
+                  args
+                );
               }
             };
           }
         } else if (this.onload) {
-          if (typeof self.miniprofiler === 'undefined' || typeof self.miniprofiler.prev_onload === 'undefined') {
+          if (
+            typeof self.miniprofiler === 'undefined' ||
+            typeof self.miniprofiler.prev_onload === 'undefined'
+          ) {
             self.miniprofiler = { prev_onload: this.onload };
 
             this.onload = function onLoadReplacement() {

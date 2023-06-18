@@ -1,4 +1,4 @@
-import { InjectionToken } from '@angular/core';
+import { InjectionToken, inject } from '@angular/core';
 import { ColorScheme, RenderPosition } from './models';
 
 /**
@@ -68,18 +68,27 @@ export interface MiniProfilerDefaultOptions {
    * to a new route within their application.
    */
   flushResultsOnRouteNavigate: boolean;
+
+  /**
+   * Allows users to toggle between the two different query dialog UIs.
+   * The `default` option renders the standard MiniProfiler interface, whereas the
+   * `alternative` option displays a custom interface that some may find more intuitive.
+   */
+  queryDialogUI: 'default' | 'alternative';
 }
 
 /**
  * Injection token to be used to override the default options.
  */
-export const NGX_MINIPROFILER_DEFAULT_OPTIONS = new InjectionToken<MiniProfilerDefaultOptions>(
-  'ngx-miniprofiler-default-options',
-  {
-    providedIn: 'root',
-    factory: NGX_MINIPROFILER_DEFAULT_OPTIONS_FACTORY,
-  }
-);
+export const NGX_MINIPROFILER_DEFAULT_OPTIONS =
+  new InjectionToken<MiniProfilerDefaultOptions>(
+    'ngx-miniprofiler-default-options',
+    {
+      factory() {
+        return inject(NGX_MINIPROFILER_DEFAULT_OPTIONS_FACTORY);
+      },
+    }
+  );
 
 export function NGX_MINIPROFILER_DEFAULT_OPTIONS_FACTORY(): MiniProfilerDefaultOptions {
   return {
@@ -100,5 +109,6 @@ export function NGX_MINIPROFILER_DEFAULT_OPTIONS_FACTORY(): MiniProfilerDefaultO
     toggleShortcut: 'Alt+P',
     trivialMilliseconds: 2,
     flushResultsOnRouteNavigate: false,
+    queryDialogUI: 'default',
   };
 }

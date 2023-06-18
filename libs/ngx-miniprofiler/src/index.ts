@@ -1,6 +1,5 @@
 // needed to satisfy compiler
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export * as NgxMiniProfilerTypes from '../typings';
+import * as NgxMiniProfilerTypings from '../typings';
 
 export {
   PolymorpheusOutletDirective,

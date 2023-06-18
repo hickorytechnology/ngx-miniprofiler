@@ -1,6 +1,9 @@
 {
   "name": "@hickorytechnology/ngx-miniprofiler",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "repository": {
+    "url": "https://github.com/hickorytechnology/ngx-miniprofiler"
+  },
   "peerDependencies": {
     "@angular/common": "14 - 16",
     "@angular/core": "14 - 16",
